@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 /**
  * Starts the Sandrone chatbot application.
  */
@@ -13,9 +15,22 @@ public class Sandrone {
         System.out.println(banner);
         System.out.println("Tch... Hello. I'm Sandrone. ...Don't make me say it again.");
         System.out.println("What do you want?");
+        System.out.println("____________________________________________________________\n");
+
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            String command = scanner.nextLine();
+
+            if (command.equals("bye")) {
+                break;
+            } else {
+                System.out.println("____________________________________________________________");
+                System.out.println(command + "\n");
+                System.out.println("____________________________________________________________\n");
+            }
+        }
         System.out.println("____________________________________________________________");
-        System.out.println("Bye.");
-        System.out.println();
+        System.out.println("Bye...\n");
         System.out.println("____________________________________________________________");
     }
 }
