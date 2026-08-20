@@ -25,8 +25,7 @@ public class Sandrone {
         System.out.println("____________________________________________________________\n");
 
         Scanner scanner = new Scanner(System.in);
-        String[] tasks = new String[MAX_TASKS];
-        boolean[] isDone = new boolean[MAX_TASKS];
+        Task[] tasks = new Task[MAX_TASKS];
         int numberOfTasks = 0;
 
         while (true) {
@@ -38,26 +37,28 @@ public class Sandrone {
                 System.out.println("____________________________________________________________");
                 System.out.println(" Here are the tasks in your list:");
                 for (int taskNumber = 0; taskNumber < numberOfTasks; taskNumber++) {
-                    String status = isDone[taskNumber] ? "[X]" : "[ ]";
-                    System.out.println(" " + (taskNumber + 1) + "." + status + " " + tasks[taskNumber]);
+                    System.out.println(" " + (taskNumber + 1) + ".[" + tasks[taskNumber].getStatusIcon()
+                        + "] " + tasks[taskNumber].getDescription());
                 }
                 System.out.println("____________________________________________________________\n");
             } else if (command.startsWith("mark ")) {
                 int taskNumber = Integer.parseInt(command.substring(5)) - 1;
-                isDone[taskNumber] = true;
+                tasks[taskNumber].markAsDone();
                 System.out.println("____________________________________________________________");
                 System.out.println(" Nice! I've marked this task as done:");
-                System.out.println("   [X] " + tasks[taskNumber]);
+                System.out.println("   [" + tasks[taskNumber].getStatusIcon() + "] "
+                    + tasks[taskNumber].getDescription());
                 System.out.println("____________________________________________________________\n");
             } else if (command.startsWith("unmark ")) {
                 int taskNumber = Integer.parseInt(command.substring(7)) - 1;
-                isDone[taskNumber] = false;
+                tasks[taskNumber].markAsNotDone();
                 System.out.println("____________________________________________________________");
                 System.out.println(" OK, I've marked this task as not done yet:");
-                System.out.println("   [ ] " + tasks[taskNumber]);
+                System.out.println("   [" + tasks[taskNumber].getStatusIcon() + "] "
+                    + tasks[taskNumber].getDescription());
                 System.out.println("____________________________________________________________\n");
             } else {
-                tasks[numberOfTasks] = command;
+                tasks[numberOfTasks] = new Task(command);
                 numberOfTasks++;
                 System.out.println("____________________________________________________________");
                 System.out.println(" added: " + command);
