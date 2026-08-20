@@ -49,6 +49,13 @@ public class Sandrone {
                 System.out.println(" Nice! I've marked this task as done:");
                 System.out.println("   [X] " + tasks[taskNumber]);
                 System.out.println("____________________________________________________________\n");
+            } else if (command.startsWith("unmark ")) {
+                int taskNumber = Integer.parseInt(command.substring(7)) - 1;
+                isDone[taskNumber] = false;
+                System.out.println("____________________________________________________________");
+                System.out.println(" OK, I've marked this task as not done yet:");
+                System.out.println("   [ ] " + tasks[taskNumber]);
+                System.out.println("____________________________________________________________\n");
             } else {
                 tasks[numberOfTasks] = command;
                 numberOfTasks++;
