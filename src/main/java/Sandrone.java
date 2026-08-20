@@ -4,6 +4,13 @@ import java.util.Scanner;
  * Starts the Sandrone chatbot application.
  */
 public class Sandrone {
+    private static final int MAX_TASKS = 100;
+
+    /**
+     * Runs the chatbot and keeps the user's tasks in memory until the program ends.
+     *
+     * @param args command-line arguments, which are not used by this application
+     */
     public static void main(String[] args) {
         String banner = " SSSS    A   N   N DDDD  RRRR   OOO  N   N EEEEE\n"
             + "S       A A  NN  N D   D R   R O   O NN  N E    \n"
@@ -18,17 +25,29 @@ public class Sandrone {
         System.out.println("____________________________________________________________\n");
 
         Scanner scanner = new Scanner(System.in);
+        String[] tasks = new String[MAX_TASKS];
+        int numberOfTasks = 0;
+
         while (true) {
             String command = scanner.nextLine();
 
             if (command.equals("bye")) {
                 break;
-            } else {
+            } else if (command.equals("list")) {
                 System.out.println("____________________________________________________________");
-                System.out.println(command + "\n");
+                for (int taskNumber = 0; taskNumber < numberOfTasks; taskNumber++) {
+                    System.out.println(" " + (taskNumber + 1) + ". " + tasks[taskNumber]);
+                }
+                System.out.println("____________________________________________________________\n");
+            } else {
+                tasks[numberOfTasks] = command;
+                numberOfTasks++;
+                System.out.println("____________________________________________________________");
+                System.out.println(" added: " + command);
                 System.out.println("____________________________________________________________\n");
             }
         }
+        scanner.close();
         System.out.println("____________________________________________________________");
         System.out.println("Bye...\n");
         System.out.println("____________________________________________________________");
