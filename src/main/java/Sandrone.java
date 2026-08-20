@@ -26,6 +26,7 @@ public class Sandrone {
 
         Scanner scanner = new Scanner(System.in);
         String[] tasks = new String[MAX_TASKS];
+        boolean[] isDone = new boolean[MAX_TASKS];
         int numberOfTasks = 0;
 
         while (true) {
@@ -35,9 +36,18 @@ public class Sandrone {
                 break;
             } else if (command.equals("list")) {
                 System.out.println("____________________________________________________________");
+                System.out.println(" Here are the tasks in your list:");
                 for (int taskNumber = 0; taskNumber < numberOfTasks; taskNumber++) {
-                    System.out.println(" " + (taskNumber + 1) + ". " + tasks[taskNumber]);
+                    String status = isDone[taskNumber] ? "[X]" : "[ ]";
+                    System.out.println(" " + (taskNumber + 1) + "." + status + " " + tasks[taskNumber]);
                 }
+                System.out.println("____________________________________________________________\n");
+            } else if (command.startsWith("mark ")) {
+                int taskNumber = Integer.parseInt(command.substring(5)) - 1;
+                isDone[taskNumber] = true;
+                System.out.println("____________________________________________________________");
+                System.out.println(" Nice! I've marked this task as done:");
+                System.out.println("   [X] " + tasks[taskNumber]);
                 System.out.println("____________________________________________________________\n");
             } else {
                 tasks[numberOfTasks] = command;
