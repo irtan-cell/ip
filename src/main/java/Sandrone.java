@@ -37,8 +37,7 @@ public class Sandrone {
                 printLine(false);
                 System.out.println(" Here are the tasks in your list:");
                 for (int taskNumber = 0; taskNumber < numberOfTasks; taskNumber++) {
-                    System.out.println(" " + (taskNumber + 1) + ".[" + tasks[taskNumber].getStatusIcon()
-                        + "] " + tasks[taskNumber].getDescription());
+                    System.out.println(" " + (taskNumber + 1) + "." + tasks[taskNumber]);
                 }
                 printLine(true);
             } else if (command.startsWith("mark ")) {
@@ -68,9 +67,34 @@ public class Sandrone {
                     + tasks[taskIndex].getDescription());
                 printLine(true);
             } else {
-                tasks[numberOfTasks] = new Task(command);
+                if (command.startsWith("todo ")) {
+                    String description = command.substring(5);
+                    tasks[numberOfTasks] = new Todo(description);
+                } else if (command.startsWith("deadline ")) {
+                    String rest = command.substring(9);
+                    String[] parts = rest.split(" /by ");
+                    String description = parts[0];
+                    String by = parts.length > 1 ? parts[1] : "";
+                    tasks[numberOfTasks] = new Deadline(description, by);
+                } else if (command.startsWith("event ")) {
+                    String rest = command.substring(6);
+                    String[] fromParts = rest.split(" /from ");
+                    String description = fromParts[0];
+
+                    String fromAndTo = fromParts.length > 1 ? fromParts[1] : "";
+                    String[] toParts = fromAndTo.split(" /to ");
+                    String from = toParts[0];
+                    String to = toParts.length > 1 ? toParts[1] : "";
+                    tasks[numberOfTasks] = new Event(description, from, to);
+                } else {
+                    printMessage("Invalid command, use case: todo/deadline/event item");
+                    continue;
+                }
                 numberOfTasks++;
-                printMessage(" added: " + command);
+                printLine(false);
+                System.out.println(" added: " + command);
+                System.out.println("You now have " + numberOfTasks + " tasks in the list");
+                printLine(true);
             }
         }
         scanner.close();

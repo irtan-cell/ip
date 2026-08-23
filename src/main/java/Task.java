@@ -45,4 +45,10 @@ public class Task {
     public void markAsNotDone() {
         isDone = false;
     }
+
+    @Override
+    public String toString() {
+        return "[" + this.getStatusIcon()
+            + "] " + this.getDescription();
+    }
 }
