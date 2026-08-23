@@ -1,10 +1,11 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
  * Starts the Sandrone chatbot application.
  */
 public class Sandrone {
-    private static final int MAX_TASKS = 100;
+    private static final int MAX_TASKS = 10;
 
     /**
      * Runs the chatbot and keeps the user's tasks in memory until the program ends.
@@ -25,8 +26,7 @@ public class Sandrone {
         printLine(true);
 
         Scanner scanner = new Scanner(System.in);
-        Task[] tasks = new Task[MAX_TASKS];
-        int numberOfTasks = 0;
+        ArrayList<Task> tasks = new ArrayList<>();
 
         while (true) {
             try {
@@ -38,50 +38,66 @@ public class Sandrone {
                 } else if (command.equals("list")) {
                     printLine(false);
                     System.out.println(" Here are the tasks in your list:");
-                    for (int taskNumber = 0; taskNumber < numberOfTasks; taskNumber++) {
-                        System.out.println(" " + (taskNumber + 1) + "." + tasks[taskNumber]);
+                    for (int taskNumber = 0; taskNumber < tasks.size(); taskNumber++) {
+                        System.out.println(" " + (taskNumber + 1) + "." + tasks.get(taskNumber));
                     }
                     printLine(true);
 
                 } else if (command.startsWith("mark ")) {
                     int taskNumber = Integer.parseInt(command.substring(5));
-                    if (taskNumber <= 0 || taskNumber > numberOfTasks) {
+                    if (taskNumber <= 0 || taskNumber > tasks.size()) {
                         printMessage("Invalid task index");
                         continue;
                     }
                     int taskIndex = taskNumber - 1;
-                    tasks[taskIndex].markAsDone();
+                    tasks.get(taskIndex).markAsDone();
                     printLine(false);
                     System.out.println(" Nice! I've marked this task as done:");
-                    System.out.println("   [" + tasks[taskIndex].getStatusIcon() + "] "
-                        + tasks[taskIndex].getDescription());
+                    System.out.println("   [" + tasks.get(taskIndex).getStatusIcon() + "] "
+                        + tasks.get(taskIndex).getDescription());
                     printLine(true);
 
                 } else if (command.startsWith("unmark ")) {
                     int taskNumber = Integer.parseInt(command.substring(7));
-                    if (taskNumber <= 0 || taskNumber > numberOfTasks) {
+                    if (taskNumber <= 0 || taskNumber > tasks.size()) {
                         printMessage("Invalid task index");
                         continue;
                     }
                     int taskIndex = taskNumber - 1;
-                    tasks[taskIndex].markAsNotDone();
+                    tasks.get(taskIndex).markAsNotDone();
                     printLine(false);
                     System.out.println(" OK, I've marked this task as not done yet:");
-                    System.out.println("   [" + tasks[taskIndex].getStatusIcon() + "] "
-                        + tasks[taskIndex].getDescription());
+                    System.out.println("   [" + tasks.get(taskIndex).getStatusIcon() + "] "
+                        + tasks.get(taskIndex).getDescription());
                     printLine(true);
 
                 } else if (command.startsWith("todo ") || command.startsWith("deadline ")
                     || command.startsWith("event ")) {
+                    if (tasks.size() >= MAX_TASKS) {
+                        throw new SandroneException("Cannot exceed maximum number of tasks");
+                    }
                     Task task = createTask(command);
                     if (task == null) {
                         continue;
                     }
-                    tasks[numberOfTasks] = task;
-                    numberOfTasks++;
+                    tasks.add(task);
                     printLine(false);
                     System.out.println(" added: " + command);
-                    System.out.println("You now have " + numberOfTasks + " tasks in the list");
+                    System.out.println("You now have " + tasks.size() + " tasks in the list");
+                    printLine(true);
+                } else if (command.startsWith("remove ")) {
+                    int taskNumber = Integer.parseInt(command.substring(7));
+                    if (taskNumber <= 0 || taskNumber > tasks.size()) {
+                        printMessage("Invalid task index");
+                        continue;
+                    }
+                    int taskIndex = taskNumber - 1;
+                    Task prevTask = tasks.get(taskIndex);
+                    tasks.remove(taskIndex);
+                    printLine(false);
+                    System.out.println(" Got it, I have removed this task:");
+                    System.out.println("   [" + prevTask.getStatusIcon() + "] "
+                        + prevTask.getDescription());
                     printLine(true);
                 } else {
                     throw new SandroneException("Invalid messaage");
