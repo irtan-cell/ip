@@ -18,11 +18,11 @@ public class Sandrone {
             + "    S  A   A N  NN D   D R R   O   O N  NN E    \n"
             + "SSSS   A   A N   N DDDD  R  RR  OOO  N   N EEEEE\n";
 
-        System.out.println("____________________________________________________________");
+        printLine(false);
         System.out.println(banner);
         System.out.println("Tch... Hello. I'm Sandrone. ...Don't make me say it again.");
         System.out.println("What do you want?");
-        System.out.println("____________________________________________________________\n");
+        printLine(true);
 
         Scanner scanner = new Scanner(System.in);
         Task[] tasks = new Task[MAX_TASKS];
@@ -34,40 +34,60 @@ public class Sandrone {
             if (command.equals("bye")) {
                 break;
             } else if (command.equals("list")) {
-                System.out.println("____________________________________________________________");
+                printLine(false);
                 System.out.println(" Here are the tasks in your list:");
                 for (int taskNumber = 0; taskNumber < numberOfTasks; taskNumber++) {
                     System.out.println(" " + (taskNumber + 1) + ".[" + tasks[taskNumber].getStatusIcon()
                         + "] " + tasks[taskNumber].getDescription());
                 }
-                System.out.println("____________________________________________________________\n");
+                printLine(true);
             } else if (command.startsWith("mark ")) {
-                int taskNumber = Integer.parseInt(command.substring(5)) - 1;
-                tasks[taskNumber].markAsDone();
-                System.out.println("____________________________________________________________");
+                int taskNumber = Integer.parseInt(command.substring(5));
+                if (taskNumber <= 0 || taskNumber > numberOfTasks) {
+                    printMessage("Invalid task index");
+                    continue;
+                }
+                int taskIndex = taskNumber - 1;
+                tasks[taskIndex].markAsDone();
+                printLine(false);
                 System.out.println(" Nice! I've marked this task as done:");
-                System.out.println("   [" + tasks[taskNumber].getStatusIcon() + "] "
-                    + tasks[taskNumber].getDescription());
-                System.out.println("____________________________________________________________\n");
+                System.out.println("   [" + tasks[taskIndex].getStatusIcon() + "] "
+                    + tasks[taskIndex].getDescription());
+                printLine(true);
             } else if (command.startsWith("unmark ")) {
-                int taskNumber = Integer.parseInt(command.substring(7)) - 1;
-                tasks[taskNumber].markAsNotDone();
-                System.out.println("____________________________________________________________");
+                int taskNumber = Integer.parseInt(command.substring(7));
+                if (taskNumber <= 0 || taskNumber > numberOfTasks) {
+                    printMessage("Invalid task index");
+                    continue;
+                }
+                int taskIndex = taskNumber - 1;
+                tasks[taskIndex].markAsNotDone();
+                printLine(false);
                 System.out.println(" OK, I've marked this task as not done yet:");
-                System.out.println("   [" + tasks[taskNumber].getStatusIcon() + "] "
-                    + tasks[taskNumber].getDescription());
-                System.out.println("____________________________________________________________\n");
+                System.out.println("   [" + tasks[taskIndex].getStatusIcon() + "] "
+                    + tasks[taskIndex].getDescription());
+                printLine(true);
             } else {
                 tasks[numberOfTasks] = new Task(command);
                 numberOfTasks++;
-                System.out.println("____________________________________________________________");
-                System.out.println(" added: " + command);
-                System.out.println("____________________________________________________________\n");
+                printMessage(" added: " + command);
             }
         }
         scanner.close();
-        System.out.println("____________________________________________________________");
-        System.out.println("Bye...\n");
-        System.out.println("____________________________________________________________");
+        printMessage("Bye...");
+    }
+
+    public static void printLine(boolean lineAfter) {
+        if (lineAfter) {
+            System.out.println("____________________________________________________________\n");
+        } else {
+            System.out.println("____________________________________________________________");
+        }
+    }
+
+    public static void printMessage(String message) {
+        printLine(false);
+        System.out.println(message);
+        printLine(true);
     }
 }
