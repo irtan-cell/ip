@@ -5,8 +5,11 @@ import java.io.IOException;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +20,9 @@ import java.util.Scanner;
  */
 public class Sandrone {
     private static final int MAX_TASKS = 10;
+    private static final DateTimeFormatter LIST_DATE_FORMAT =
+        DateTimeFormatter.ofPattern("d/M/uuuu")
+            .withResolverStyle(ResolverStyle.STRICT);
     /** Relative location where the current task list is saved. */
     private static final Path SAVE_PATH = Path.of("data", "tasks.txt");
 
@@ -65,10 +71,19 @@ public class Sandrone {
                         break;
 
                     case LIST: {
+                        String dateText = command.substring("list".length()).trim();
+                        LocalDate listDate = dateText.isEmpty() ? null : parseListDate(dateText);
                         printLine(false);
-                        System.out.println(" Here are the tasks in your list:");
+                        if (dateText.isEmpty()) {
+                            System.out.println(" Here are the tasks in your list:");
+                        } else {
+                            System.out.println(" Here are the tasks on " + dateText + ":");
+                        }
                         for (int taskNumber = 0; taskNumber < tasks.size(); taskNumber++) {
-                            System.out.println(" " + (taskNumber + 1) + "." + tasks.get(taskNumber));
+                            Task task = tasks.get(taskNumber);
+                            if (listDate == null || task.occursOn(listDate)) {
+                                System.out.println(" " + (taskNumber + 1) + "." + task);
+                            }
                         }
                         printLine(true);
                         break;
@@ -179,7 +194,7 @@ public class Sandrone {
 
             validateTaskText(description, "Description");
             validateTaskText(by, "Deadline time");
-            return new Deadline(description, by);
+            return new Deadline(description, byDate);
         } else if (command.equals("event") || command.startsWith("event ")) {
             String rest = command.substring(5).trim();
             String[] fromParts = rest.split(" /from ", 2);
@@ -199,7 +214,7 @@ public class Sandrone {
             validateTaskText(description, "Description");
             validateTaskText(from, "Event start time");
             validateTaskText(to, "Event end time");
-            return new Event(description, from, to);
+            return new Event(description, fromDate, toDate);
         } else {
             throw new SandroneException("Invalid command");
         }
@@ -292,14 +307,14 @@ public class Sandrone {
             requirePartCount(parts, 4, "deadline");
             validateTaskText(parts[2], "Description");
             validateTaskText(parts[3], "Deadline time");
-            task = new Deadline(parts[2], parts[3]);
+            task = new Deadline(parts[2], parseDateTime(parts[3]));
             break;
         case "E":
             requirePartCount(parts, 5, "event");
             validateTaskText(parts[2], "Description");
             validateTaskText(parts[3], "Event start time");
             validateTaskText(parts[4], "Event end time");
-            task = new Event(parts[2], parts[3], parts[4]);
+            task = new Event(parts[2], parseDateTime(parts[3]), parseDateTime(parts[4]));
             break;
         default:
             throw new SandroneException("unknown task type");
@@ -353,9 +368,15 @@ public class Sandrone {
      */
     private static LocalDateTime parseDateTime(String input) throws SandroneException {
         DateTimeFormatter[] formats = {
-            DateTimeFormatter.ofPattern("uuuu-MM-dd HHmm"),
-            DateTimeFormatter.ofPattern("d/M/uuuu HHmm"),
-            DateTimeFormatter.ofPattern("d/M/uuuu h:mma")
+            DateTimeFormatter.ofPattern("uuuu-MM-dd HHmm")
+                .withResolverStyle(ResolverStyle.STRICT),
+            DateTimeFormatter.ofPattern("d/M/uuuu HHmm")
+                .withResolverStyle(ResolverStyle.STRICT),
+            new DateTimeFormatterBuilder()
+                .parseCaseInsensitive()
+                .appendPattern("d/M/uuuu h:mma")
+                .toFormatter()
+                .withResolverStyle(ResolverStyle.STRICT)
         };
 
         for (DateTimeFormatter format : formats) {
@@ -368,5 +389,14 @@ public class Sandrone {
 
         throw new SandroneException("Invalid date, correct examples include\n" + 
             "2026-08-29 1430, 29/8/2026 1430, 29/8/2026 2:30PM");
+    }
+
+    /** Parses the date accepted by the 'list <date>' command. */
+    private static LocalDate parseListDate(String input) throws SandroneException {
+        try {
+            return LocalDate.parse(input, LIST_DATE_FORMAT);
+        } catch (DateTimeParseException e) {
+            throw new SandroneException("Invalid list date. Use d/M/yyyy, e.g. 29/8/2026");
+        }
     }
 }

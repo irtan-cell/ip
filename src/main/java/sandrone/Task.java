@@ -1,5 +1,7 @@
 package sandrone;
 
+import java.time.LocalDate;
+
 /**
  * Represents a task with a description and a completion status.
  */
@@ -46,6 +48,17 @@ public class Task {
     /** Marks this task as not completed. */
     public void markAsNotDone() {
         isDone = false;
+    }
+
+    /**
+     * Returns whether this task is associated with the given calendar date.
+     * Tasks without a date, such as todos, are not associated with any date.
+     *
+     * @param date the date to check
+     * @return {@code false} for a task with no date
+     */
+    public boolean occursOn(LocalDate date) {
+        return false;
     }
 
     @Override
