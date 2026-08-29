@@ -1,8 +1,5 @@
 package sandrone;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.LocalDate;
@@ -10,7 +7,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -46,9 +42,10 @@ public class Sandrone {
     public static void main(String[] args) {
         ArrayList<Task> tasks = new ArrayList<>();
         Ui ui = new Ui();
+        Storage storage = new Storage(SAVE_PATH, ui);
         ui.showWelcome();
 
-        tasks = loadTasks(SAVE_PATH, ui);
+        tasks = loadTasks(storage.load(), ui);
 
         Scanner scanner = new Scanner(System.in);
         boolean exit = false;
@@ -83,7 +80,7 @@ public class Sandrone {
                     case MARK: {
                         int taskIndex = getTaskIndex(command, "mark", tasks);
                         tasks.get(taskIndex).markAsDone();
-                        saveTasks(tasks, SAVE_PATH, ui);
+                        storage.save(tasks);
                         ui.printLine(false);
                         System.out.println(" Nice! I've marked this task as done:");
                         System.out.println("   [" + tasks.get(taskIndex).getStatusIcon() + "] "
@@ -95,7 +92,7 @@ public class Sandrone {
                     case UNMARK: {
                         int taskIndex = getTaskIndex(command, "unmark", tasks);
                         tasks.get(taskIndex).markAsNotDone();
-                        saveTasks(tasks, SAVE_PATH, ui);
+                        storage.save(tasks);
                         ui.printLine(false);
                         System.out.println(" OK, I've marked this task as not done yet:");
                         System.out.println("   [" + tasks.get(taskIndex).getStatusIcon() + "] "
@@ -117,7 +114,7 @@ public class Sandrone {
                         System.out.println(" added: " + command);
                         System.out.println("You now have " + tasks.size() + " tasks in the list");
                         ui.printLine(true);
-                        saveTasks(tasks, SAVE_PATH, ui);
+                        storage.save(tasks);
                         break;
                     }
 
@@ -130,7 +127,7 @@ public class Sandrone {
                         System.out.println("   [" + prevTask.getStatusIcon() + "] "
                             + prevTask.getDescription());
                         ui.printLine(true);
-                        saveTasks(tasks, SAVE_PATH, ui);
+                        storage.save(tasks);
                         break;
                     }
 
@@ -192,63 +189,27 @@ public class Sandrone {
     }
 
     /**
-     * Saves every task in the given list to a relative file, creating its parent
-     * directory when necessary.
+     * Recreates tasks from the records loaded from the save file.
      *
-     * @param tasks the tasks to save
-     * @param path the relative file path to write
-     */
-    public static void saveTasks(ArrayList<Task> tasks, Path path, Ui ui) {
-        try {
-            Path parentDirectory = path.getParent();
-            if (parentDirectory != null) {
-                Files.createDirectories(parentDirectory);
-            }
-            try (BufferedWriter writer = Files.newBufferedWriter(path)) {
-                for (Task task : tasks) {
-                    writer.write(task.toFileFormat());
-                    writer.newLine();
-                }
-            }
-        } catch (IOException | InvalidPathException | SecurityException e) {
-            ui.showMessage("Warning: Could not save tasks: " + e.getMessage());
-        }
-    }
-
-    /**
-     * Loads tasks from a relative save file. A missing file means the chatbot
-     * is being started for the first time, so an empty task list is returned.
-     *
-     * @param path the relative file path to read
+     * @param taskLines the records read from the save file
+     * @param ui user interface used to report invalid saved records
      * @return the tasks restored from the save file
      */
-    public static ArrayList<Task> loadTasks(Path path, Ui ui) {
+    public static ArrayList<Task> loadTasks(List<String> taskLines, Ui ui) {
         ArrayList<Task> tasks = new ArrayList<>();
-        try {
-            if (!Files.exists(path)) {
-                return tasks;
+        for (String taskLine : taskLines) {
+            if (taskLine.isBlank()) {
+                continue;
             }
-            if (!Files.isRegularFile(path)) {
-                ui.showMessage("Warning: Could not load tasks: Save path is not a file");
-                return tasks;
+            if (tasks.size() >= MAX_TASKS) {
+                ui.showMessage("Warning: Skipped saved tasks beyond the maximum of " + MAX_TASKS);
+                break;
             }
-            List<String> taskLines = Files.readAllLines(path);
-            for (String taskLine : taskLines) {
-                if (taskLine.isBlank()) {
-                    continue;
-                }
-                if (tasks.size() >= MAX_TASKS) {
-                    ui.showMessage("Warning: Skipped saved tasks beyond the maximum of " + MAX_TASKS);
-                    break;
-                }
-                try {
-                    tasks.add(createTaskFromFile(taskLine));
-                } catch (SandroneException e) {
-                    ui.showMessage("Warning: Skipped invalid saved task: " + e.getMessage());
-                }
+            try {
+                tasks.add(createTaskFromFile(taskLine));
+            } catch (SandroneException e) {
+                ui.showMessage("Warning: Skipped invalid saved task: " + e.getMessage());
             }
-        } catch (IOException | InvalidPathException | SecurityException e) {
-            ui.showMessage("Warning: Could not load tasks: " + e.getMessage());
         }
         return tasks;
     }
