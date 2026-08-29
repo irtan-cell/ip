@@ -29,8 +29,8 @@ unmark a task; and list all saved-in-memory tasks.
 
 ```text
 todo read book
-deadline return book /by Sunday
-event project meeting /from Monday 2pm /to Monday 4pm
+deadline return book /by 29/8/2026 1430
+event project meeting /from 30/8/2026 1400 /to 30/8/2026 1600
 mark 1
 unmark 1
 list
@@ -57,12 +57,12 @@ You now have 1 tasks in the list
 ____________________________________________________________
 
 ____________________________________________________________
- added: deadline return book /by Sunday
+ added: deadline return book /by 29/8/2026 1430
 You now have 2 tasks in the list
 ____________________________________________________________
 
 ____________________________________________________________
- added: event project meeting /from Monday 2pm /to Monday 4pm
+ added: event project meeting /from 30/8/2026 1400 /to 30/8/2026 1600
 You now have 3 tasks in the list
 ____________________________________________________________
 
@@ -79,8 +79,8 @@ ____________________________________________________________
 ____________________________________________________________
  Here are the tasks in your list:
  1.[T][ ] read book
- 2.[D][ ] return book (by: Sunday)
- 3.[E][ ] project meeting (from: Monday 2pm to: Monday 4pm)
+ 2.[D][ ] return book (by: 29/8/2026 2:30PM)
+ 3.[E][ ] project meeting (from: 30/8/2026 2:00PM to: 30/8/2026 4:00PM)
 ____________________________________________________________
 
 ____________________________________________________________
@@ -101,16 +101,16 @@ to create this file is to run the listed preliminary session in the same
 
 ```text
 T | 0 | read book
-D | 1 | return book | Sunday
-E | 0 | project meeting | Monday 2pm | Monday 4pm
+D | 1 | return book | 29/8/2026 2:30PM
+E | 0 | project meeting | 30/8/2026 2:00PM | 30/8/2026 4:00PM
 ```
 
 Preliminary session to create that file through the application:
 
 ```text
 todo read book
-deadline return book /by Sunday
-event project meeting /from Monday 2pm /to Monday 4pm
+deadline return book /by 29/8/2026 1430
+event project meeting /from 30/8/2026 1400 /to 30/8/2026 1600
 mark 2
 bye
 ```
@@ -139,8 +139,8 @@ ____________________________________________________________
 ____________________________________________________________
  Here are the tasks in your list:
  1.[T][ ] read book
- 2.[D][X] return book (by: Sunday)
- 3.[E][ ] project meeting (from: Monday 2pm to: Monday 4pm)
+ 2.[D][X] return book (by: 29/8/2026 2:30PM)
+ 3.[E][ ] project meeting (from: 30/8/2026 2:00PM to: 30/8/2026 4:00PM)
 ____________________________________________________________
 
 ____________________________________________________________
