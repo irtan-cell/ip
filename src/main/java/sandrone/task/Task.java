@@ -61,6 +61,7 @@ public class Task {
         return false;
     }
 
+    /** Returns this task in the format used for display. */
     @Override
     public String toString() {
         return "[" + this.getStatusIcon()
