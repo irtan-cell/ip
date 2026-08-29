@@ -4,6 +4,9 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -172,6 +175,8 @@ public class Sandrone {
             }
             String description = parts[0].trim();
             String by = parts[1].trim();
+            LocalDateTime byDate = parseDateTime(by);
+
             validateTaskText(description, "Description");
             validateTaskText(by, "Deadline time");
             return new Deadline(description, by);
@@ -187,7 +192,10 @@ public class Sandrone {
                 throw new SandroneException("Event must include /from and /to times");
             }
             String from = toParts[0].trim();
+            LocalDateTime fromDate = parseDateTime(from);
             String to = toParts[1].trim();
+            LocalDateTime toDate = parseDateTime(to);
+
             validateTaskText(description, "Description");
             validateTaskText(from, "Event start time");
             validateTaskText(to, "Event end time");
@@ -333,5 +341,32 @@ public class Sandrone {
         } catch (NumberFormatException e) {
             throw new SandroneException("Task number must be a positive whole number");
         }
+    }
+
+    /** 
+     * Return LocalDateTime object from input if can convert, else throw Sandrone Error 
+     * 
+     * Accepted examples include:
+     * 2026-08-29 1430
+     * 29/8/2026 1430
+     * 29/8/2026 2:30PM
+     */
+    private static LocalDateTime parseDateTime(String input) throws SandroneException {
+        DateTimeFormatter[] formats = {
+            DateTimeFormatter.ofPattern("uuuu-MM-dd HHmm"),
+            DateTimeFormatter.ofPattern("d/M/uuuu HHmm"),
+            DateTimeFormatter.ofPattern("d/M/uuuu h:mma")
+        };
+
+        for (DateTimeFormatter format : formats) {
+            try {
+                return LocalDateTime.parse(input, format);
+            } catch (DateTimeParseException ignored) {
+                // try the next supported format
+            }
+        }
+
+        throw new SandroneException("Invalid date, correct examples include\n" + 
+            "2026-08-29 1430, 29/8/2026 1430, 29/8/2026 2:30PM");
     }
 }
