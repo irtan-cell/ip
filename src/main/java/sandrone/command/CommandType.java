@@ -1,6 +1,8 @@
 package sandrone.command;
 
-/** Identifies the supported categories of user commands. */
+/**
+ * Identifies the supported categories of user commands.
+ */
 public enum CommandType {
     BYE,
     LIST,

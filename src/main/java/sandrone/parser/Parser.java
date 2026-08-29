@@ -29,20 +29,36 @@ public class Parser {
         DateTimeFormatter.ofPattern("d/M/uuuu")
             .withResolverStyle(ResolverStyle.STRICT);
 
-    /** Returns the type of command represented by the user's input. */
+    /**
+     * Returns the type of command represented by the user's input.
+     */
     public CommandType getCommandType(String input) {
-        if (input.equals("bye")) return CommandType.BYE;
-        if (input.equals("list") || input.startsWith("list ")) return CommandType.LIST;
-        if (input.equals("mark") || input.startsWith("mark ")) return CommandType.MARK;
-        if (input.equals("unmark") || input.startsWith("unmark ")) return CommandType.UNMARK;
+        if (input.equals("bye")) {
+            return CommandType.BYE;
+        }
+        if (input.equals("list") || input.startsWith("list ")) {
+            return CommandType.LIST;
+        }
+        if (input.equals("mark") || input.startsWith("mark ")) {
+            return CommandType.MARK;
+        }
+        if (input.equals("unmark") || input.startsWith("unmark ")) {
+            return CommandType.UNMARK;
+        }
         if (input.equals("todo") || input.startsWith("todo ")
                 || input.equals("deadline") || input.startsWith("deadline ")
-                || input.equals("event") || input.startsWith("event ")) return CommandType.ADD;
-        if (input.equals("remove") || input.startsWith("remove ")) return CommandType.REMOVE;
+                || input.equals("event") || input.startsWith("event ")) {
+            return CommandType.ADD;
+        }
+        if (input.equals("remove") || input.startsWith("remove ")) {
+            return CommandType.REMOVE;
+        }
         return CommandType.UNKNOWN;
     }
 
-    /** Parses a complete user command into an executable command object. */
+    /**
+     * Parses a complete user command into an executable command object.
+     */
     public Command parse(String command) throws SandroneException {
         switch (getCommandType(command)) {
         case BYE:
@@ -63,7 +79,9 @@ public class Parser {
         }
     }
 
-    /** Creates a task from a todo, deadline, or event command. */
+    /**
+     * Creates a task from a todo, deadline, or event command.
+     */
     public Task parseTask(String command) throws SandroneException {
         if (command.equals("todo") || command.startsWith("todo ")) {
             String description = command.substring(4).trim();
@@ -102,7 +120,9 @@ public class Parser {
         throw new SandroneException("Invalid command");
     }
 
-    /** Recreates one task from its saved pipe-separated representation. */
+    /**
+     * Recreates one task from its saved pipe-separated representation.
+     */
     public Task parseTaskFromFile(String taskLine) throws SandroneException {
         if (taskLine == null) {
             throw new SandroneException("empty task record");
@@ -140,7 +160,9 @@ public class Parser {
         return task;
     }
 
-    /** Parses the one-based task number without checking whether it exists. */
+    /**
+     * Parses the one-based task number without checking whether it exists.
+     */
     private int parseTaskNumber(String command, String commandName) throws SandroneException {
         String taskNumberText = command.substring(commandName.length()).trim();
         try {
@@ -150,7 +172,9 @@ public class Parser {
         }
     }
 
-    /** Parses the date accepted by a {@code list <date>} command. */
+    /**
+     * Parses the date accepted by a {@code list <date>} command.
+     */
     public LocalDate parseListDate(String input) throws SandroneException {
         try {
             return LocalDate.parse(input, LIST_DATE_FORMAT);
@@ -159,7 +183,9 @@ public class Parser {
         }
     }
 
-    /** Validates a non-empty task field that can be stored in the save format. */
+    /**
+     * Validates a non-empty task field that can be stored in the save format.
+     */
     private void validateTaskText(String text, String fieldName) throws SandroneException {
         if (text.isBlank()) {
             throw new SandroneException(fieldName + " cannot be empty");
@@ -169,7 +195,9 @@ public class Parser {
         }
     }
 
-    /** Validates the expected number of fields in one saved task record. */
+    /**
+     * Validates the expected number of fields in one saved task record.
+     */
     private void requirePartCount(String[] parts, int expectedCount, String taskType)
             throws SandroneException {
         if (parts.length != expectedCount) {
@@ -177,7 +205,9 @@ public class Parser {
         }
     }
 
-    /** Parses a supported task date and time. */
+    /**
+     * Parses a supported task date and time.
+     */
     private LocalDateTime parseDateTime(String input) throws SandroneException {
         DateTimeFormatter[] formats = {
             DateTimeFormatter.ofPattern("uuuu-MM-dd HHmm").withResolverStyle(ResolverStyle.STRICT),

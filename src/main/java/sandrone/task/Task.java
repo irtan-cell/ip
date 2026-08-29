@@ -40,12 +40,16 @@ public class Task {
         return description;
     }
 
-    /** Marks this task as completed. */
+    /**
+     * Marks this task as completed.
+     */
     public void markAsDone() {
         isDone = true;
     }
 
-    /** Marks this task as not completed. */
+    /**
+     * Marks this task as not completed.
+     */
     public void markAsNotDone() {
         isDone = false;
     }
@@ -61,14 +65,18 @@ public class Task {
         return false;
     }
 
-    /** Returns this task in the format used for display. */
+    /**
+     * Returns this task in the format used for display.
+     */
     @Override
     public String toString() {
         return "[" + this.getStatusIcon()
             + "] " + this.getDescription();
     }
 
-    /** Format to write task in the file. */
+    /**
+     * Returns this task in the format used in the save file.
+     */
     public String toFileFormat() {
         return (this.isDone ? "1" : "0") + " | " + description;
     }

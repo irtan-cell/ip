@@ -17,16 +17,30 @@ public class Ui {
         + "SSSS   A   A N   N DDDD  R  RR  OOO  N   N EEEEE\n";
     private final Scanner scanner = new Scanner(System.in);
 
-    /** Returns whether another command is available from the user. */
-    public boolean hasNextCommand() { return scanner.hasNextLine(); }
+    /**
+     * Returns whether another command is available from the user.
+     */
+    public boolean hasNextCommand() {
+        return scanner.hasNextLine();
+    }
 
-    /** Reads and trims one command from the user. */
-    public String readCommand() { return scanner.nextLine().trim(); }
+    /**
+     * Reads and trims one command from the user.
+     */
+    public String readCommand() {
+        return scanner.nextLine().trim();
+    }
 
-    /** Closes the command input stream. */
-    public void close() { scanner.close(); }
+    /**
+     * Closes the command input stream.
+     */
+    public void close() {
+        scanner.close();
+    }
 
-    /** Displays the welcome banner and greeting. */
+    /**
+     * Displays the welcome banner and greeting.
+     */
     public void showWelcome() {
         printLine(false);
         System.out.println(BANNER);
@@ -35,14 +49,18 @@ public class Ui {
         printLine(true);
     }
 
-    /** Displays a message enclosed by separator lines. */
+    /**
+     * Displays a message enclosed by separator lines.
+     */
     public void showMessage(String message) {
         printLine(false);
         System.out.println(message);
         printLine(true);
     }
 
-    /** Prints a separator line, optionally followed by a blank line. */
+    /**
+     * Prints a separator line, optionally followed by a blank line.
+     */
     public void printLine(boolean lineAfter) {
         if (lineAfter) {
             System.out.println("____________________________________________________________\n");
@@ -51,31 +69,51 @@ public class Ui {
         }
     }
 
-    /** Displays the requested tasks. */
+    /**
+     * Displays the requested tasks.
+     */
     public void showTaskList(TaskList tasks, LocalDate date, String dateText) {
         printLine(false);
-        System.out.println(dateText.isEmpty() ? " Here are the tasks in your list:" : " Here are the tasks on " + dateText + ":");
+        String listHeading = dateText.isEmpty()
+                ? " Here are the tasks in your list:"
+                : " Here are the tasks on " + dateText + ":";
+        System.out.println(listHeading);
         for (int i = 0; i < tasks.size(); i++) {
             Task task = tasks.getTask(i);
-            if (date == null || task.occursOn(date)) System.out.println(" " + (i + 1) + "." + task);
+            if (date == null || task.occursOn(date)) {
+                System.out.println(" " + (i + 1) + "." + task);
+            }
         }
         printLine(true);
     }
 
-    /** Displays confirmation that a task was added. */
+    /**
+     * Displays confirmation that a task was added.
+     */
     public void showTaskAdded(String command, int count) {
-        printLine(false); System.out.println(" added: " + command); System.out.println("You now have " + count + " tasks in the list"); printLine(true);
+        printLine(false);
+        System.out.println(" added: " + command);
+        System.out.println("You now have " + count + " tasks in the list");
+        printLine(true);
     }
 
-    /** Displays confirmation that a task was marked or unmarked. */
+    /**
+     * Displays confirmation that a task was marked or unmarked.
+     */
     public void showTaskMarked(Task task, boolean isDone) {
-        printLine(false); System.out.println(isDone ? " Nice! I've marked this task as done:" : " OK, I've marked this task as not done yet:");
-        System.out.println("   [" + task.getStatusIcon() + "] " + task.getDescription()); printLine(true);
+        printLine(false);
+        System.out.println(isDone ? " Nice! I've marked this task as done:"
+                : " OK, I've marked this task as not done yet:");
+        System.out.println("   [" + task.getStatusIcon() + "] " + task.getDescription());
+        printLine(true);
     }
 
-    /** Displays confirmation that a task was removed. */
+    /**
+     * Displays confirmation that a task was removed.
+     */
     public void showTaskRemoved(Task task) {
         printLine(false); System.out.println(" Got it, I have removed this task:");
-        System.out.println("   [" + task.getStatusIcon() + "] " + task.getDescription()); printLine(true);
+        System.out.println("   [" + task.getStatusIcon() + "] " + task.getDescription());
+        printLine(true);
     }
 }
