@@ -1,3 +1,6 @@
+import java.io.BufferedWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -6,9 +9,22 @@ import java.util.Scanner;
  */
 public class Sandrone {
     private static final int MAX_TASKS = 10;
+    private static final String SAVE_PATH = "data/tasks.txt";
 
     /**
      * Runs the chatbot and keeps the user's tasks in memory until the program ends.
+     *
+     * <p>Example usage:</p>
+     * <pre>
+     * todo borrow book
+     * deadline return book /by Sunday
+     * event project meeting /from Mon 2pm /to Mon 4pm
+     * list
+     * mark 1
+     * unmark 1
+     * remove 1
+     * bye
+     * </pre>
      *
      * @param args command-line arguments, which are not used by this application
      */
@@ -93,6 +109,7 @@ public class Sandrone {
                         System.out.println(" added: " + command);
                         System.out.println("You now have " + tasks.size() + " tasks in the list");
                         printLine(true);
+                        saveTasks(tasks, SAVE_PATH);
                         break;
                     }
 
@@ -110,6 +127,7 @@ public class Sandrone {
                         System.out.println("   [" + prevTask.getStatusIcon() + "] "
                             + prevTask.getDescription());
                         printLine(true);
+                        saveTasks(tasks, SAVE_PATH);
                         break;
                     }
 
@@ -124,6 +142,9 @@ public class Sandrone {
         printMessage("Bye...");
     }
 
+    /**
+     *  print the line used in the UI, lineAfter = true then do a linebreak else do not
+     */
     public static void printLine(boolean lineAfter) {
         if (lineAfter) {
             System.out.println("____________________________________________________________\n");
@@ -132,12 +153,18 @@ public class Sandrone {
         }
     }
 
+    /**
+     *  print message surrounded by lines in the UI
+    */
     public static void printMessage(String message) {
         printLine(false);
         System.out.println(message);
         printLine(true);
     }
 
+    /**
+     *  create Task and return it
+     */
     public static Task createTask(String command) throws SandroneException {
         if (command.startsWith("todo ")) {
             String description = command.substring(5).trim();
@@ -172,5 +199,28 @@ public class Sandrone {
         } else {
             return null;
         }
+    }
+
+    /**
+     *  save list of tasks to the path given
+     */
+    public static void saveTasks(ArrayList<Task> tasks, String path) {
+        try {
+            // Create the data directory if it doesn't exist
+            java.nio.file.Path dataDir = java.nio.file.Paths.get("data");
+            if (!java.nio.file.Files.exists(dataDir)) {
+                java.nio.file.Files.createDirectories(dataDir);
+            }
+            // Write the file
+            BufferedWriter writer = Files.newBufferedWriter(Paths.get(path));
+            
+            for (Task task : tasks) {
+                writer.write(task.toFileFormat());
+                writer.newLine();
+            }
+            writer.close();
+        } catch (java.io.IOException e) {
+            printMessage("Warning: Could not save tasks: " + e.getMessage());
+        }   
     }
 }

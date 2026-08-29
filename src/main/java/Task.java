@@ -51,4 +51,9 @@ public class Task {
         return "[" + this.getStatusIcon()
             + "] " + this.getDescription();
     }
+
+    /** Format to write task in the file. */
+    public String toFileFormat() {
+        return (this.isDone ? "1" : "0") + " | " + description;
+    }
 }
