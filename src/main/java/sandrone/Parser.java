@@ -28,6 +28,27 @@ public class Parser {
         return CommandType.UNKNOWN;
     }
 
+    /** Parses a complete user command into an executable command object. */
+    public Command parse(String command) throws SandroneException {
+        switch (getCommandType(command)) {
+        case BYE:
+            return new ExitCommand();
+        case LIST:
+            String dateText = command.substring("list".length()).trim();
+            return new ListCommand(dateText.isEmpty() ? null : parseListDate(dateText), dateText);
+        case MARK:
+            return new MarkCommand(parseTaskNumber(command, "mark"));
+        case UNMARK:
+            return new UnmarkCommand(parseTaskNumber(command, "unmark"));
+        case ADD:
+            return new AddCommand(parseTask(command), command);
+        case REMOVE:
+            return new RemoveCommand(parseTaskNumber(command, "remove"));
+        default:
+            throw new SandroneException("Invalid command");
+        }
+    }
+
     /** Creates a task from a todo, deadline, or event command. */
     public Task parseTask(String command) throws SandroneException {
         if (command.equals("todo") || command.startsWith("todo ")) {
@@ -115,6 +136,16 @@ public class Parser {
                 throw new SandroneException("Invalid task index");
             }
             return taskNumber - 1;
+        } catch (NumberFormatException e) {
+            throw new SandroneException("Task number must be a positive whole number");
+        }
+    }
+
+    /** Parses the one-based task number without checking whether it exists. */
+    private int parseTaskNumber(String command, String commandName) throws SandroneException {
+        String taskNumberText = command.substring(commandName.length()).trim();
+        try {
+            return Integer.parseInt(taskNumberText);
         } catch (NumberFormatException e) {
             throw new SandroneException("Task number must be a positive whole number");
         }
