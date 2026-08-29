@@ -45,19 +45,10 @@ public class Sandrone {
      */
     public static void main(String[] args) {
         ArrayList<Task> tasks = new ArrayList<>();
-        String banner = " SSSS    A   N   N DDDD  RRRR   OOO  N   N EEEEE\n"
-            + "S       A A  NN  N D   D R   R O   O NN  N E    \n"
-            + " SSS   AAAAA N N N D   D RRRR  O   O N N N EEEE \n"
-            + "    S  A   A N  NN D   D R R   O   O N  NN E    \n"
-            + "SSSS   A   A N   N DDDD  R  RR  OOO  N   N EEEEE\n";
+        Ui ui = new Ui();
+        ui.showWelcome();
 
-        printLine(false);
-        System.out.println(banner);
-        System.out.println("Tch... Hello. I'm Sandrone. ...Don't make me say it again.");
-        System.out.println("What do you want?");
-        printLine(true);
-
-        tasks = loadTasks(SAVE_PATH);
+        tasks = loadTasks(SAVE_PATH, ui);
 
         Scanner scanner = new Scanner(System.in);
         boolean exit = false;
@@ -73,7 +64,7 @@ public class Sandrone {
                     case LIST: {
                         String dateText = command.substring("list".length()).trim();
                         LocalDate listDate = dateText.isEmpty() ? null : parseListDate(dateText);
-                        printLine(false);
+                        ui.printLine(false);
                         if (dateText.isEmpty()) {
                             System.out.println(" Here are the tasks in your list:");
                         } else {
@@ -85,31 +76,31 @@ public class Sandrone {
                                 System.out.println(" " + (taskNumber + 1) + "." + task);
                             }
                         }
-                        printLine(true);
+                        ui.printLine(true);
                         break;
                     }
 
                     case MARK: {
                         int taskIndex = getTaskIndex(command, "mark", tasks);
                         tasks.get(taskIndex).markAsDone();
-                        saveTasks(tasks, SAVE_PATH);
-                        printLine(false);
+                        saveTasks(tasks, SAVE_PATH, ui);
+                        ui.printLine(false);
                         System.out.println(" Nice! I've marked this task as done:");
                         System.out.println("   [" + tasks.get(taskIndex).getStatusIcon() + "] "
                             + tasks.get(taskIndex).getDescription());
-                        printLine(true);
+                        ui.printLine(true);
                         break;
                     }
 
                     case UNMARK: {
                         int taskIndex = getTaskIndex(command, "unmark", tasks);
                         tasks.get(taskIndex).markAsNotDone();
-                        saveTasks(tasks, SAVE_PATH);
-                        printLine(false);
+                        saveTasks(tasks, SAVE_PATH, ui);
+                        ui.printLine(false);
                         System.out.println(" OK, I've marked this task as not done yet:");
                         System.out.println("   [" + tasks.get(taskIndex).getStatusIcon() + "] "
                             + tasks.get(taskIndex).getDescription());
-                        printLine(true);
+                        ui.printLine(true);
                         break;
                     }
 
@@ -122,11 +113,11 @@ public class Sandrone {
                             continue;
                         }
                         tasks.add(task);
-                        printLine(false);
+                        ui.printLine(false);
                         System.out.println(" added: " + command);
                         System.out.println("You now have " + tasks.size() + " tasks in the list");
-                        printLine(true);
-                        saveTasks(tasks, SAVE_PATH);
+                        ui.printLine(true);
+                        saveTasks(tasks, SAVE_PATH, ui);
                         break;
                     }
 
@@ -134,12 +125,12 @@ public class Sandrone {
                         int taskIndex = getTaskIndex(command, "remove", tasks);
                         Task prevTask = tasks.get(taskIndex);
                         tasks.remove(taskIndex);
-                        printLine(false);
+                        ui.printLine(false);
                         System.out.println(" Got it, I have removed this task:");
                         System.out.println("   [" + prevTask.getStatusIcon() + "] "
                             + prevTask.getDescription());
-                        printLine(true);
-                        saveTasks(tasks, SAVE_PATH);
+                        ui.printLine(true);
+                        saveTasks(tasks, SAVE_PATH, ui);
                         break;
                     }
 
@@ -147,31 +138,11 @@ public class Sandrone {
                         throw new SandroneException("Invalid command");
                 }
             } catch (SandroneException e) {
-                printMessage("Oops! " + e.getMessage());
+                ui.showMessage("Oops! " + e.getMessage());
             }
         }
         scanner.close();
-        printMessage("Bye...");
-    }
-
-    /**
-     *  print the line used in the UI, lineAfter = true then do a linebreak else do not
-     */
-    public static void printLine(boolean lineAfter) {
-        if (lineAfter) {
-            System.out.println("____________________________________________________________\n");
-        } else {
-            System.out.println("____________________________________________________________");
-        }
-    }
-
-    /**
-     *  print message surrounded by lines in the UI
-    */
-    public static void printMessage(String message) {
-        printLine(false);
-        System.out.println(message);
-        printLine(true);
+        ui.showMessage("Bye...");
     }
 
     /**
@@ -227,7 +198,7 @@ public class Sandrone {
      * @param tasks the tasks to save
      * @param path the relative file path to write
      */
-    public static void saveTasks(ArrayList<Task> tasks, Path path) {
+    public static void saveTasks(ArrayList<Task> tasks, Path path, Ui ui) {
         try {
             Path parentDirectory = path.getParent();
             if (parentDirectory != null) {
@@ -240,7 +211,7 @@ public class Sandrone {
                 }
             }
         } catch (IOException | InvalidPathException | SecurityException e) {
-            printMessage("Warning: Could not save tasks: " + e.getMessage());
+            ui.showMessage("Warning: Could not save tasks: " + e.getMessage());
         }
     }
 
@@ -251,14 +222,14 @@ public class Sandrone {
      * @param path the relative file path to read
      * @return the tasks restored from the save file
      */
-    public static ArrayList<Task> loadTasks(Path path) {
+    public static ArrayList<Task> loadTasks(Path path, Ui ui) {
         ArrayList<Task> tasks = new ArrayList<>();
         try {
             if (!Files.exists(path)) {
                 return tasks;
             }
             if (!Files.isRegularFile(path)) {
-                printMessage("Warning: Could not load tasks: Save path is not a file");
+                ui.showMessage("Warning: Could not load tasks: Save path is not a file");
                 return tasks;
             }
             List<String> taskLines = Files.readAllLines(path);
@@ -267,17 +238,17 @@ public class Sandrone {
                     continue;
                 }
                 if (tasks.size() >= MAX_TASKS) {
-                    printMessage("Warning: Skipped saved tasks beyond the maximum of " + MAX_TASKS);
+                    ui.showMessage("Warning: Skipped saved tasks beyond the maximum of " + MAX_TASKS);
                     break;
                 }
                 try {
                     tasks.add(createTaskFromFile(taskLine));
                 } catch (SandroneException e) {
-                    printMessage("Warning: Skipped invalid saved task: " + e.getMessage());
+                    ui.showMessage("Warning: Skipped invalid saved task: " + e.getMessage());
                 }
             }
         } catch (IOException | InvalidPathException | SecurityException e) {
-            printMessage("Warning: Could not load tasks: " + e.getMessage());
+            ui.showMessage("Warning: Could not load tasks: " + e.getMessage());
         }
         return tasks;
     }
