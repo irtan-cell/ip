@@ -31,11 +31,11 @@ public class Event extends Task {
 
     @Override
     public String toString() {
-        return "[E]" + super.toString() + " (from: " + this.start.format(DISPLAY_FORMAT) + " to: " + this.end.format(DISPLAY_FORMAT) + ")";
+        return "[E]" + super.toString() + " (from: " + start.format(DISPLAY_FORMAT) + " to: " + end.format(DISPLAY_FORMAT) + ")";
     }
 
     @Override
     public String toFileFormat() {
-        return "E | " + super.toFileFormat() + " | " + this.start.format(DISPLAY_FORMAT) + " | " + this.end.format(DISPLAY_FORMAT);
+        return "E | " + super.toFileFormat() + " | " + start.format(DISPLAY_FORMAT) + " | " + end.format(DISPLAY_FORMAT);
     }
 }

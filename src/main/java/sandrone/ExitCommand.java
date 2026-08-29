@@ -1,0 +1,16 @@
+package sandrone;
+
+/** Represents the command that exits the chatbot. */
+public class ExitCommand extends Command {
+    /** Does not need to change application state before exiting. */
+    @Override
+    public void execute(TaskList tasks, Ui ui, Storage storage) {
+        // The command loop handles the farewell message after this command exits.
+    }
+
+    /** Always ends the command loop. */
+    @Override
+    public boolean isExit() {
+        return true;
+    }
+}

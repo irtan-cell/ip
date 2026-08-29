@@ -25,11 +25,11 @@ public class Deadline extends Task {
 
     @Override
     public String toString() {
-        return "[D]" + super.toString() + " (by: " + this.by.format(DISPLAY_FORMAT) + ")";
+        return "[D]" + super.toString() + " (by: " + by.format(DISPLAY_FORMAT) + ")";
     }
 
     @Override
     public String toFileFormat() {
-        return "D | " + super.toFileFormat() + " | " + this.by.format(DISPLAY_FORMAT);
+        return "D | " + super.toFileFormat() + " | " + by.format(DISPLAY_FORMAT);
     }
 }
