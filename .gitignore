@@ -16,5 +16,8 @@ bin/
 # Temp files
 _temp/
 
+# Tasks saved while the chatbot is running
+data/
+
 /text-ui-test/ACTUAL.TXT
 text-ui-test/EXPECTED-UNIX.TXT
