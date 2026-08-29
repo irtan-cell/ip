@@ -140,21 +140,6 @@ public class Parser {
         return task;
     }
 
-    /** Returns a valid zero-based task index from a numbered command. */
-    public int parseTaskIndex(String command, String commandName, int taskCount)
-            throws SandroneException {
-        String taskNumberText = command.substring(commandName.length()).trim();
-        try {
-            int taskNumber = Integer.parseInt(taskNumberText);
-            if (taskNumber <= 0 || taskNumber > taskCount) {
-                throw new SandroneException("Invalid task index");
-            }
-            return taskNumber - 1;
-        } catch (NumberFormatException e) {
-            throw new SandroneException("Task number must be a positive whole number");
-        }
-    }
-
     /** Parses the one-based task number without checking whether it exists. */
     private int parseTaskNumber(String command, String commandName) throws SandroneException {
         String taskNumberText = command.substring(commandName.length()).trim();
