@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -16,7 +15,7 @@ import java.util.Scanner;
 public class Sandrone {
     private static final int MAX_TASKS = 10;
     /** Relative location where the current task list is saved. */
-    private static final String SAVE_PATH = "data/tasks.txt";
+    private static final Path SAVE_PATH = Path.of("data", "tasks.txt");
 
     /**
      * Runs the chatbot and keeps the user's tasks in memory until the program ends.
@@ -205,14 +204,13 @@ public class Sandrone {
      * @param tasks the tasks to save
      * @param path the relative file path to write
      */
-    public static void saveTasks(ArrayList<Task> tasks, String path) {
+    public static void saveTasks(ArrayList<Task> tasks, Path path) {
         try {
-            Path savePath = Paths.get(path);
-            Path parentDirectory = savePath.getParent();
+            Path parentDirectory = path.getParent();
             if (parentDirectory != null) {
                 Files.createDirectories(parentDirectory);
             }
-            try (BufferedWriter writer = Files.newBufferedWriter(savePath)) {
+            try (BufferedWriter writer = Files.newBufferedWriter(path)) {
                 for (Task task : tasks) {
                     writer.write(task.toFileFormat());
                     writer.newLine();
@@ -230,18 +228,17 @@ public class Sandrone {
      * @param path the relative file path to read
      * @return the tasks restored from the save file
      */
-    public static ArrayList<Task> loadTasks(String path) {
+    public static ArrayList<Task> loadTasks(Path path) {
         ArrayList<Task> tasks = new ArrayList<>();
         try {
-            Path savePath = Paths.get(path);
-            if (!Files.exists(savePath)) {
+            if (!Files.exists(path)) {
                 return tasks;
             }
-            if (!Files.isRegularFile(savePath)) {
+            if (!Files.isRegularFile(path)) {
                 printMessage("Warning: Could not load tasks: Save path is not a file");
                 return tasks;
             }
-            List<String> taskLines = Files.readAllLines(savePath);
+            List<String> taskLines = Files.readAllLines(path);
             for (String taskLine : taskLines) {
                 if (taskLine.isBlank()) {
                     continue;
