@@ -1,4 +1,8 @@
-package sandrone;
+package sandrone.command;
+
+import sandrone.storage.Storage;
+import sandrone.task.TaskList;
+import sandrone.ui.Ui;
 
 /** Represents the command that exits the chatbot. */
 public class ExitCommand extends Command {

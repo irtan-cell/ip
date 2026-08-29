@@ -3,6 +3,12 @@ package sandrone;
 import java.nio.file.Path;
 import java.util.List;
 
+import sandrone.command.Command;
+import sandrone.parser.Parser;
+import sandrone.storage.Storage;
+import sandrone.task.TaskList;
+import sandrone.ui.Ui;
+
 /** Coordinates the user interface, command parser, task list, and storage. */
 public class Sandrone {
     private final Storage storage;

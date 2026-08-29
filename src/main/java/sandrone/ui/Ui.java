@@ -1,7 +1,10 @@
-package sandrone;
+package sandrone.ui;
 
 import java.time.LocalDate;
 import java.util.Scanner;
+
+import sandrone.task.Task;
+import sandrone.task.TaskList;
 
 /**
  * Handles all console output shown to the user.

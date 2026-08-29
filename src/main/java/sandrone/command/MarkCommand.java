@@ -1,4 +1,10 @@
-package sandrone;
+package sandrone.command;
+
+import sandrone.SandroneException;
+import sandrone.storage.Storage;
+import sandrone.task.Task;
+import sandrone.task.TaskList;
+import sandrone.ui.Ui;
 
 /** Marks a numbered task as complete. */
 public class MarkCommand extends Command {

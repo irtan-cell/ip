@@ -1,4 +1,9 @@
-package sandrone;
+package sandrone.command;
+
+import sandrone.SandroneException;
+import sandrone.storage.Storage;
+import sandrone.task.TaskList;
+import sandrone.ui.Ui;
 
 /**
  * Represents one action that the chatbot can perform.

@@ -1,7 +1,9 @@
-package sandrone;
+package sandrone.task;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import sandrone.SandroneException;
 
 /** Stores and manages the tasks in the current chatbot session. */
 public class TaskList {

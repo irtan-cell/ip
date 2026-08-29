@@ -9,7 +9,7 @@ Use Java 25. Compile the application into a temporary directory, then run the
 TEST_UI_JAVA_HOME=$(/usr/libexec/java_home -v 25)
 PROJECT_ROOT=$(pwd)
 mkdir -p _temp/ui-test-classes
-"$TEST_UI_JAVA_HOME/bin/javac" -d _temp/ui-test-classes src/main/java/sandrone/*.java
+"$TEST_UI_JAVA_HOME/bin/javac" -d _temp/ui-test-classes $(find src/main/java -name '*.java')
 TEST_DIR=$(mktemp -d)
 (cd "$TEST_DIR" && "$TEST_UI_JAVA_HOME/bin/java" -cp "$PROJECT_ROOT/_temp/ui-test-classes" sandrone.Sandrone)
 ```

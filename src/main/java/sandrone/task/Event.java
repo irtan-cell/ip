@@ -1,4 +1,4 @@
-package sandrone;
+package sandrone.task;
 
 import java.time.LocalDateTime;
 import java.time.LocalDate;
