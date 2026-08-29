@@ -2,6 +2,7 @@ package sandrone.task;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import sandrone.SandroneException;
 
@@ -69,6 +70,20 @@ public class TaskList {
     public Task removeTaskByNumber(int taskNumber) throws SandroneException {
         getTaskByNumber(taskNumber);
         return removeTask(taskNumber - 1);
+    }
+
+    /**
+     * Returns tasks whose descriptions contain the keyword, ignoring case.
+     */
+    public List<Task> findTasks(String keyword) {
+        String lowercaseKeyword = keyword.toLowerCase(Locale.ROOT);
+        List<Task> matchingTasks = new ArrayList<>();
+        for (Task task : tasks) {
+            if (task.getDescription().toLowerCase(Locale.ROOT).contains(lowercaseKeyword)) {
+                matchingTasks.add(task);
+            }
+        }
+        return List.copyOf(matchingTasks);
     }
 
     /** Returns an unmodifiable snapshot of the tasks for saving. */

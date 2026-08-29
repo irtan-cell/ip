@@ -12,6 +12,7 @@ import sandrone.command.AddCommand;
 import sandrone.command.Command;
 import sandrone.command.CommandType;
 import sandrone.command.ExitCommand;
+import sandrone.command.FindCommand;
 import sandrone.command.ListCommand;
 import sandrone.command.MarkCommand;
 import sandrone.command.RemoveCommand;
@@ -53,6 +54,9 @@ public class Parser {
         if (input.equals("remove") || input.startsWith("remove ")) {
             return CommandType.REMOVE;
         }
+        if (input.equals("find") || input.startsWith("find ")) {
+            return CommandType.FIND;
+        }
         return CommandType.UNKNOWN;
     }
 
@@ -74,6 +78,8 @@ public class Parser {
             return new AddCommand(parseTask(command), command);
         case REMOVE:
             return new RemoveCommand(parseTaskNumber(command, "remove"));
+        case FIND:
+            return new FindCommand(parseFindKeyword(command));
         default:
             throw new SandroneException("Invalid command");
         }
@@ -170,6 +176,15 @@ public class Parser {
         } catch (NumberFormatException e) {
             throw new SandroneException("Task number must be a positive whole number");
         }
+    }
+
+    /**
+     * Parses the required search keyword from a find command.
+     */
+    private String parseFindKeyword(String command) throws SandroneException {
+        String keyword = command.substring("find".length()).trim();
+        validateTaskText(keyword, "Search keyword");
+        return keyword;
     }
 
     /**

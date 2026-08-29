@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import sandrone.SandroneException;
 import sandrone.command.CommandType;
+import sandrone.command.FindCommand;
 import sandrone.task.Deadline;
 import sandrone.task.Event;
 import sandrone.task.Task;
@@ -27,6 +28,7 @@ public class ParserTest {
         assertEquals(CommandType.UNMARK, parser.getCommandType("unmark 1"));
         assertEquals(CommandType.ADD, parser.getCommandType("todo read book"));
         assertEquals(CommandType.REMOVE, parser.getCommandType("remove 1"));
+        assertEquals(CommandType.FIND, parser.getCommandType("find book"));
         assertEquals(CommandType.UNKNOWN, parser.getCommandType("remind me"));
     }
 
@@ -38,6 +40,23 @@ public class ParserTest {
 
         assertInstanceOf(Todo.class, task);
         assertEquals("[T][ ] read book", task.toString());
+    }
+
+    @Test
+    public void parse_findCommand_returnsFindCommand() throws SandroneException {
+        Parser parser = new Parser();
+
+        assertInstanceOf(FindCommand.class, parser.parse("find book"));
+    }
+
+    @Test
+    public void parse_findCommandWithoutKeyword_throwsException() {
+        Parser parser = new Parser();
+
+        SandroneException exception = assertThrows(SandroneException.class,
+            () -> parser.parse("find"));
+
+        assertEquals("Search keyword cannot be empty", exception.getMessage());
     }
 
     @Test

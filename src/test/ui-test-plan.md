@@ -42,9 +42,9 @@ bye
 ```text
 ____________________________________________________________
  SSSS    A   N   N DDDD  RRRR   OOO  N   N EEEEE
-S       A A  NN  N D   D R   R O   O NN  N E    
- SSS   AAAAA N N N D   D RRRR  O   O N N N EEEE 
-    S  A   A N  NN D   D R R   O   O N  NN E    
+S       A A  NN  N D   D R   R O   O NN  N E
+ SSS   AAAAA N N N D   D RRRR  O   O N N N EEEE
+    S  A   A N  NN D   D R R   O   O N  NN E
 SSSS   A   A N   N DDDD  R  RR  OOO  N   N EEEEE
 
 Tch... Hello. I'm Sandrone. ...Don't make me say it again.
@@ -127,9 +127,9 @@ bye
 ```text
 ____________________________________________________________
  SSSS    A   N   N DDDD  RRRR   OOO  N   N EEEEE
-S       A A  NN  N D   D R   R O   O NN  N E    
- SSS   AAAAA N N N D   D RRRR  O   O N N N EEEE 
-    S  A   A N  NN D   D R R   O   O N  NN E    
+S       A A  NN  N D   D R   R O   O NN  N E
+ SSS   AAAAA N N N D   D RRRR  O   O N N N EEEE
+    S  A   A N  NN D   D R R   O   O N  NN E
 SSSS   A   A N   N DDDD  R  RR  OOO  N   N EEEEE
 
 Tch... Hello. I'm Sandrone. ...Don't make me say it again.
@@ -165,9 +165,9 @@ bye
 ```text
 ____________________________________________________________
  SSSS    A   N   N DDDD  RRRR   OOO  N   N EEEEE
-S       A A  NN  N D   D R   R O   O NN  N E    
- SSS   AAAAA N N N D   D RRRR  O   O N N N EEEE 
-    S  A   A N  NN D   D R R   O   O N  NN E    
+S       A A  NN  N D   D R   R O   O NN  N E
+ SSS   AAAAA N N N D   D RRRR  O   O N N N EEEE
+    S  A   A N  NN D   D R R   O   O N  NN E
 SSSS   A   A N   N DDDD  R  RR  OOO  N   N EEEEE
 
 Tch... Hello. I'm Sandrone. ...Don't make me say it again.
@@ -205,9 +205,9 @@ bye
 ```text
 ____________________________________________________________
  SSSS    A   N   N DDDD  RRRR   OOO  N   N EEEEE
-S       A A  NN  N D   D R   R O   O NN  N E    
- SSS   AAAAA N N N D   D RRRR  O   O N N N EEEE 
-    S  A   A N  NN D   D R R   O   O N  NN E    
+S       A A  NN  N D   D R   R O   O NN  N E
+ SSS   AAAAA N N N D   D RRRR  O   O N N N EEEE
+    S  A   A N  NN D   D R R   O   O N  NN E
 SSSS   A   A N   N DDDD  R  RR  OOO  N   N EEEEE
 
 Tch... Hello. I'm Sandrone. ...Don't make me say it again.
@@ -244,6 +244,68 @@ ____________________________________________________________
 
 ____________________________________________________________
 Oops! Invalid command
+____________________________________________________________
+
+____________________________________________________________
+Bye...
+____________________________________________________________
+
+```
+
+### TC-05: Find tasks by description keyword
+
+**Aim:** Verify that a case-insensitive keyword search displays only matching
+tasks.
+
+**Inputs:**
+
+```text
+todo read book
+deadline return book /by 29/8/2026 1430
+todo write report
+mark 1
+find BOOK
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ SSSS    A   N   N DDDD  RRRR   OOO  N   N EEEEE
+S       A A  NN  N D   D R   R O   O NN  N E
+ SSS   AAAAA N N N D   D RRRR  O   O N N N EEEE
+    S  A   A N  NN D   D R R   O   O N  NN E
+SSSS   A   A N   N DDDD  R  RR  OOO  N   N EEEEE
+
+Tch... Hello. I'm Sandrone. ...Don't make me say it again.
+What do you want?
+____________________________________________________________
+
+____________________________________________________________
+ added: todo read book
+You now have 1 tasks in the list
+____________________________________________________________
+
+____________________________________________________________
+ added: deadline return book /by 29/8/2026 1430
+You now have 2 tasks in the list
+____________________________________________________________
+
+____________________________________________________________
+ added: todo write report
+You now have 3 tasks in the list
+____________________________________________________________
+
+____________________________________________________________
+ Nice! I've marked this task as done:
+   [X] read book
+____________________________________________________________
+
+____________________________________________________________
+ Here are the matching tasks in your list:
+ 1.[T][X] read book
+ 2.[D][ ] return book (by: 29/8/2026 2:30PM)
 ____________________________________________________________
 
 ____________________________________________________________

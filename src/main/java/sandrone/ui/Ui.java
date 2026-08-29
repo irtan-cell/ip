@@ -1,6 +1,7 @@
 package sandrone.ui;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Scanner;
 
 import sandrone.task.Task;
@@ -11,9 +12,9 @@ import sandrone.task.TaskList;
  */
 public class Ui {
     private static final String BANNER = " SSSS    A   N   N DDDD  RRRR   OOO  N   N EEEEE\n"
-        + "S       A A  NN  N D   D R   R O   O NN  N E    \n"
-        + " SSS   AAAAA N N N D   D RRRR  O   O N N N EEEE \n"
-        + "    S  A   A N  NN D   D R R   O   O N  NN E    \n"
+        + "S       A A  NN  N D   D R   R O   O NN  N E\n"
+        + " SSS   AAAAA N N N D   D RRRR  O   O N N N EEEE\n"
+        + "    S  A   A N  NN D   D R R   O   O N  NN E\n"
         + "SSSS   A   A N   N DDDD  R  RR  OOO  N   N EEEEE\n";
     private final Scanner scanner = new Scanner(System.in);
 
@@ -83,6 +84,18 @@ public class Ui {
             if (date == null || task.occursOn(date)) {
                 System.out.println(" " + (i + 1) + "." + task);
             }
+        }
+        printLine(true);
+    }
+
+    /**
+     * Displays tasks whose descriptions match a search keyword.
+     */
+    public void showMatchingTasks(List<Task> matchingTasks) {
+        printLine(false);
+        System.out.println(" Here are the matching tasks in your list:");
+        for (int i = 0; i < matchingTasks.size(); i++) {
+            System.out.println(" " + (i + 1) + "." + matchingTasks.get(i));
         }
         printLine(true);
     }

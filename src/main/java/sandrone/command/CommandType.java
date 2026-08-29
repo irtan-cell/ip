@@ -10,5 +10,6 @@ public enum CommandType {
     UNMARK,
     ADD,
     REMOVE,
+    FIND,
     UNKNOWN
 }

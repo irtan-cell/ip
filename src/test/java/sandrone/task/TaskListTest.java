@@ -1,8 +1,11 @@
 package sandrone.task;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -77,5 +80,18 @@ public class TaskListTest {
 
         assertThrows(UnsupportedOperationException.class,
             () -> tasks.getTasks().add(new Task("write report")));
+    }
+
+    @Test
+    public void findTasks_matchingKeyword_returnsCaseInsensitiveMatches() throws SandroneException {
+        TaskList tasks = new TaskList();
+        Task readBook = new Task("read book");
+        Task returnBook = new Task("return BOOK");
+        tasks.addTask(readBook);
+        tasks.addTask(new Task("write report"));
+        tasks.addTask(returnBook);
+
+        assertIterableEquals(List.of(readBook, returnBook), tasks.findTasks("book"));
+        assertIterableEquals(List.of(), tasks.findTasks("meeting"));
     }
 }
