@@ -37,8 +37,9 @@ public class Ui {
 
     /** Displays Sandrone's greeting. */
     public void showWelcome() {
-        writeLine("Tch... Hello. I'm Sandrone. ...Don't make me say it again.");
-        writeLine("What do you want?");
+        writeLines(
+                "Tch... Hello. I'm Sandrone. ...Don't make me say it again.",
+                "What do you want?");
     }
 
     /**
@@ -78,25 +79,28 @@ public class Ui {
      * Displays confirmation that a task was added.
      */
     public void showTaskAdded(String command, int count) {
-        writeLine(" added: " + command);
-        writeLine("You now have " + count + " tasks in the list");
+        writeLines(
+                " added: " + command,
+                "You now have " + count + " tasks in the list");
     }
 
     /**
      * Displays confirmation that a task was marked or unmarked.
      */
     public void showTaskMarked(Task task, boolean isDone) {
-        writeLine(isDone ? " Nice! I've marked this task as done:"
-                : " OK, I've marked this task as not done yet:");
-        writeLine("   [" + task.getStatusIcon() + "] " + task.getDescription());
+        writeLines(
+                isDone ? " Nice! I've marked this task as done:"
+                        : " OK, I've marked this task as not done yet:",
+                "   [" + task.getStatusIcon() + "] " + task.getDescription());
     }
 
     /**
      * Displays confirmation that a task was removed.
      */
     public void showTaskRemoved(Task task) {
-        writeLine(" Got it, I have removed this task:");
-        writeLine("   [" + task.getStatusIcon() + "] " + task.getDescription());
+        writeLines(
+                " Got it, I have removed this task:",
+                "   [" + task.getStatusIcon() + "] " + task.getDescription());
     }
 
     /**
@@ -112,5 +116,12 @@ public class Ui {
     private void writeLine(String line) {
         output.append(line).append(System.lineSeparator());
         System.out.println(line);
+    }
+
+    /** Writes each supplied line to both the console and the GUI output buffer. */
+    private void writeLines(String... lines) {
+        for (String line : lines) {
+            writeLine(line);
+        }
     }
 }
