@@ -11,12 +11,8 @@ import sandrone.task.TaskList;
  * Handles all console output shown to the user.
  */
 public class Ui {
-    private static final String BANNER = " SSSS    A   N   N DDDD  RRRR   OOO  N   N EEEEE\n"
-        + "S       A A  NN  N D   D R   R O   O NN  N E\n"
-        + " SSS   AAAAA N N N D   D RRRR  O   O N N N EEEE\n"
-        + "    S  A   A N  NN D   D R R   O   O N  NN E\n"
-        + "SSSS   A   A N   N DDDD  R  RR  OOO  N   N EEEEE\n";
     private final Scanner scanner = new Scanner(System.in);
+    private final StringBuilder output = new StringBuilder();
 
     /**
      * Returns whether another command is available from the user.
@@ -39,95 +35,82 @@ public class Ui {
         scanner.close();
     }
 
-    /**
-     * Displays the welcome banner and greeting.
-     */
+    /** Displays Sandrone's greeting. */
     public void showWelcome() {
-        printLine(false);
-        System.out.println(BANNER);
-        System.out.println("Tch... Hello. I'm Sandrone. ...Don't make me say it again.");
-        System.out.println("What do you want?");
-        printLine(true);
+        writeLine("Tch... Hello. I'm Sandrone. ...Don't make me say it again.");
+        writeLine("What do you want?");
     }
 
     /**
      * Displays a message enclosed by separator lines.
      */
     public void showMessage(String message) {
-        printLine(false);
-        System.out.println(message);
-        printLine(true);
-    }
-
-    /**
-     * Prints a separator line, optionally followed by a blank line.
-     */
-    public void printLine(boolean lineAfter) {
-        if (lineAfter) {
-            System.out.println("____________________________________________________________\n");
-        } else {
-            System.out.println("____________________________________________________________");
-        }
+        writeLine(message);
     }
 
     /**
      * Displays the requested tasks.
      */
     public void showTaskList(TaskList tasks, LocalDate date, String dateText) {
-        printLine(false);
         String listHeading = dateText.isEmpty()
                 ? " Here are the tasks in your list:"
                 : " Here are the tasks on " + dateText + ":";
-        System.out.println(listHeading);
+        writeLine(listHeading);
         for (int i = 0; i < tasks.size(); i++) {
             Task task = tasks.getTask(i);
             if (date == null || task.occursOn(date)) {
-                System.out.println(" " + (i + 1) + "." + task);
+                writeLine(" " + (i + 1) + "." + task);
             }
         }
-        printLine(true);
     }
 
     /**
      * Displays tasks whose descriptions match a search keyword.
      */
     public void showMatchingTasks(List<Task> matchingTasks) {
-        printLine(false);
-        System.out.println(" Here are the matching tasks in your list:");
+        writeLine(" Here are the matching tasks in your list:");
         for (int i = 0; i < matchingTasks.size(); i++) {
-            System.out.println(" " + (i + 1) + "." + matchingTasks.get(i));
+            writeLine(" " + (i + 1) + "." + matchingTasks.get(i));
         }
-        printLine(true);
     }
 
     /**
      * Displays confirmation that a task was added.
      */
     public void showTaskAdded(String command, int count) {
-        printLine(false);
-        System.out.println(" added: " + command);
-        System.out.println("You now have " + count + " tasks in the list");
-        printLine(true);
+        writeLine(" added: " + command);
+        writeLine("You now have " + count + " tasks in the list");
     }
 
     /**
      * Displays confirmation that a task was marked or unmarked.
      */
     public void showTaskMarked(Task task, boolean isDone) {
-        printLine(false);
-        System.out.println(isDone ? " Nice! I've marked this task as done:"
+        writeLine(isDone ? " Nice! I've marked this task as done:"
                 : " OK, I've marked this task as not done yet:");
-        System.out.println("   [" + task.getStatusIcon() + "] " + task.getDescription());
-        printLine(true);
+        writeLine("   [" + task.getStatusIcon() + "] " + task.getDescription());
     }
 
     /**
      * Displays confirmation that a task was removed.
      */
     public void showTaskRemoved(Task task) {
-        printLine(false);
-        System.out.println(" Got it, I have removed this task:");
-        System.out.println("   [" + task.getStatusIcon() + "] " + task.getDescription());
-        printLine(true);
+        writeLine(" Got it, I have removed this task:");
+        writeLine("   [" + task.getStatusIcon() + "] " + task.getDescription());
+    }
+
+    /**
+     * Returns all output produced since the previous call, for display in the GUI.
+     */
+    public String consumeOutput() {
+        String outputText = output.toString();
+        output.setLength(0);
+        return outputText;
+    }
+
+    /** Writes one line to both the console and the GUI output buffer. */
+    private void writeLine(String line) {
+        output.append(line).append(System.lineSeparator());
+        System.out.println(line);
     }
 }

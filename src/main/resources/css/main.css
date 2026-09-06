@@ -1,0 +1,26 @@
+.root {
+    main-color: rgb(237, 255, 242);
+    -fx-background-color: main-color;
+}
+
+.text-field {
+    -fx-background-color: #d9ffe2;
+    -fx-font: 16px "Arial";
+}
+
+.button {
+    -fx-background-color: mediumspringgreen;
+    -fx-font: italic bold 14px "Arial";
+}
+
+.button:hover {
+    -fx-background-color: cyan;
+}
+
+.scroll-pane {
+    -fx-background-color: rgba(0, 0, 0, .08);
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}

@@ -15,6 +15,7 @@ public class Sandrone {
     private final TaskList tasks;
     private final Ui ui;
     private final Parser parser;
+    private boolean exitRequested;
 
     /**
      * Creates the chatbot and restores any previously saved tasks.
@@ -30,19 +31,42 @@ public class Sandrone {
 
     /** Runs the command loop until the user enters {@code bye}. */
     public void run() {
-        ui.showWelcome();
-        boolean exit = false;
-        while (!exit && ui.hasNextCommand()) {
-            try {
-                Command command = parser.parse(ui.readCommand());
-                command.execute(tasks, ui, storage);
-                exit = command.isExit();
-            } catch (SandroneException e) {
-                ui.showMessage("Oops! " + e.getMessage());
-            }
+        showWelcome();
+        while (!exitRequested && ui.hasNextCommand()) {
+            getResponse(ui.readCommand());
         }
         ui.close();
-        ui.showMessage("Bye...");
+    }
+
+    /** Returns Sandrone's welcome message for the selected user interface. */
+    public String showWelcome() {
+        ui.showWelcome();
+        return ui.consumeOutput();
+    }
+
+    /**
+     * Processes one user command through the existing parser and command logic.
+     *
+     * @param input command entered by the user
+     * @return text produced while processing the command
+     */
+    public String getResponse(String input) {
+        try {
+            Command command = parser.parse(input.trim());
+            command.execute(tasks, ui, storage);
+            exitRequested = command.isExit();
+            if (exitRequested) {
+                ui.showMessage("Bye...");
+            }
+        } catch (SandroneException e) {
+            ui.showMessage("Oops! " + e.getMessage());
+        }
+        return ui.consumeOutput();
+    }
+
+    /** Returns whether the most recently processed command was an exit command. */
+    public boolean isExitRequested() {
+        return exitRequested;
     }
 
     /** Recreates the task list from saved task records. */
