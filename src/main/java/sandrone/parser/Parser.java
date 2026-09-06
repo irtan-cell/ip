@@ -65,23 +65,23 @@ public class Parser {
      */
     public Command parse(String command) throws SandroneException {
         switch (getCommandType(command)) {
-        case BYE:
-            return new ExitCommand();
-        case LIST:
-            String dateText = command.substring("list".length()).trim();
-            return new ListCommand(dateText.isEmpty() ? null : parseListDate(dateText), dateText);
-        case MARK:
-            return new MarkCommand(parseTaskNumber(command, "mark"));
-        case UNMARK:
-            return new UnmarkCommand(parseTaskNumber(command, "unmark"));
-        case ADD:
-            return new AddCommand(parseTask(command), command);
-        case REMOVE:
-            return new RemoveCommand(parseTaskNumber(command, "remove"));
-        case FIND:
-            return new FindCommand(parseFindKeyword(command));
-        default:
-            throw new SandroneException("Invalid command");
+            case BYE:
+                return new ExitCommand();
+            case LIST:
+                String dateText = command.substring("list".length()).trim();
+                return new ListCommand(dateText.isEmpty() ? null : parseListDate(dateText), dateText);
+            case MARK:
+                return new MarkCommand(parseTaskNumber(command, "mark"));
+            case UNMARK:
+                return new UnmarkCommand(parseTaskNumber(command, "unmark"));
+            case ADD:
+                return new AddCommand(parseTask(command), command);
+            case REMOVE:
+                return new RemoveCommand(parseTaskNumber(command, "remove"));
+            case FIND:
+                return new FindCommand(parseFindKeyword(command));
+            default:
+                throw new SandroneException("Invalid command");
         }
     }
 
@@ -139,26 +139,26 @@ public class Parser {
         }
         Task task;
         switch (parts[0]) {
-        case "T":
-            requirePartCount(parts, 3, "todo");
-            validateTaskText(parts[2], "Description");
-            task = new Todo(parts[2]);
-            break;
-        case "D":
-            requirePartCount(parts, 4, "deadline");
-            validateTaskText(parts[2], "Description");
-            validateTaskText(parts[3], "Deadline time");
-            task = new Deadline(parts[2], parseDateTime(parts[3]));
-            break;
-        case "E":
-            requirePartCount(parts, 5, "event");
-            validateTaskText(parts[2], "Description");
-            validateTaskText(parts[3], "Event start time");
-            validateTaskText(parts[4], "Event end time");
-            task = new Event(parts[2], parseDateTime(parts[3]), parseDateTime(parts[4]));
-            break;
-        default:
-            throw new SandroneException("unknown task type");
+            case "T":
+                requirePartCount(parts, 3, "todo");
+                validateTaskText(parts[2], "Description");
+                task = new Todo(parts[2]);
+                break;
+            case "D":
+                requirePartCount(parts, 4, "deadline");
+                validateTaskText(parts[2], "Description");
+                validateTaskText(parts[3], "Deadline time");
+                task = new Deadline(parts[2], parseDateTime(parts[3]));
+                break;
+            case "E":
+                requirePartCount(parts, 5, "event");
+                validateTaskText(parts[2], "Description");
+                validateTaskText(parts[3], "Event start time");
+                validateTaskText(parts[4], "Event end time");
+                task = new Event(parts[2], parseDateTime(parts[3]), parseDateTime(parts[4]));
+                break;
+            default:
+                throw new SandroneException("unknown task type");
         }
         if (parts[1].equals("1")) {
             task.markAsDone();

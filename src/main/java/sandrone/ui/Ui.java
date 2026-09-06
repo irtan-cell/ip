@@ -125,7 +125,8 @@ public class Ui {
      * Displays confirmation that a task was removed.
      */
     public void showTaskRemoved(Task task) {
-        printLine(false); System.out.println(" Got it, I have removed this task:");
+        printLine(false);
+        System.out.println(" Got it, I have removed this task:");
         System.out.println("   [" + task.getStatusIcon() + "] " + task.getDescription());
         printLine(true);
     }
