@@ -40,6 +40,7 @@ public class MainWindow extends AnchorPane {
     /** Sends the entered command to Sandrone and displays its response. */
     @FXML
     private void handleUserInput() {
+        assert sandrone != null : "Sandrone must be injected before handling user input";
         String input = userInput.getText();
         if (input.isBlank()) {
             return;
