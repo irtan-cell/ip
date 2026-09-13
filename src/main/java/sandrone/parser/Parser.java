@@ -26,6 +26,15 @@ import sandrone.task.Todo;
  * Interprets command text and saved task records as application data.
  */
 public class Parser {
+    private static final String BYE_COMMAND = "bye";
+    private static final String LIST_COMMAND = "list";
+    private static final String MARK_COMMAND = "mark";
+    private static final String UNMARK_COMMAND = "unmark";
+    private static final String TODO_COMMAND = "todo";
+    private static final String DEADLINE_COMMAND = "deadline";
+    private static final String EVENT_COMMAND = "event";
+    private static final String REMOVE_COMMAND = "remove";
+    private static final String FIND_COMMAND = "find";
     private static final DateTimeFormatter LIST_DATE_FORMAT =
         DateTimeFormatter.ofPattern("d/M/uuuu")
             .withResolverStyle(ResolverStyle.STRICT);
@@ -34,27 +43,27 @@ public class Parser {
      * Returns the type of command represented by the user's input.
      */
     public CommandType getCommandType(String input) {
-        if (input.equals("bye")) {
+        if (input.equals(BYE_COMMAND)) {
             return CommandType.BYE;
         }
-        if (input.equals("list") || input.startsWith("list ")) {
+        if (isCommand(input, LIST_COMMAND)) {
             return CommandType.LIST;
         }
-        if (input.equals("mark") || input.startsWith("mark ")) {
+        if (isCommand(input, MARK_COMMAND)) {
             return CommandType.MARK;
         }
-        if (input.equals("unmark") || input.startsWith("unmark ")) {
+        if (isCommand(input, UNMARK_COMMAND)) {
             return CommandType.UNMARK;
         }
-        if (input.equals("todo") || input.startsWith("todo ")
-                || input.equals("deadline") || input.startsWith("deadline ")
-                || input.equals("event") || input.startsWith("event ")) {
+        if (isCommand(input, TODO_COMMAND)
+                || isCommand(input, DEADLINE_COMMAND)
+                || isCommand(input, EVENT_COMMAND)) {
             return CommandType.ADD;
         }
-        if (input.equals("remove") || input.startsWith("remove ")) {
+        if (isCommand(input, REMOVE_COMMAND)) {
             return CommandType.REMOVE;
         }
-        if (input.equals("find") || input.startsWith("find ")) {
+        if (isCommand(input, FIND_COMMAND)) {
             return CommandType.FIND;
         }
         return CommandType.UNKNOWN;
@@ -68,16 +77,16 @@ public class Parser {
             case BYE:
                 return new ExitCommand();
             case LIST:
-                String dateText = command.substring("list".length()).trim();
+                String dateText = command.substring(LIST_COMMAND.length()).trim();
                 return new ListCommand(dateText.isEmpty() ? null : parseListDate(dateText), dateText);
             case MARK:
-                return new MarkCommand(parseTaskNumber(command, "mark"));
+                return new MarkCommand(parseTaskNumber(command, MARK_COMMAND));
             case UNMARK:
-                return new UnmarkCommand(parseTaskNumber(command, "unmark"));
+                return new UnmarkCommand(parseTaskNumber(command, UNMARK_COMMAND));
             case ADD:
                 return new AddCommand(parseTask(command), command);
             case REMOVE:
-                return new RemoveCommand(parseTaskNumber(command, "remove"));
+                return new RemoveCommand(parseTaskNumber(command, REMOVE_COMMAND));
             case FIND:
                 return new FindCommand(parseFindKeyword(command));
             default:
@@ -89,13 +98,13 @@ public class Parser {
      * Creates a task from a todo, deadline, or event command.
      */
     public Task parseTask(String command) throws SandroneException {
-        if (command.equals("todo") || command.startsWith("todo ")) {
+        if (isCommand(command, TODO_COMMAND)) {
             return parseTodo(command);
         }
-        if (command.equals("deadline") || command.startsWith("deadline ")) {
+        if (isCommand(command, DEADLINE_COMMAND)) {
             return parseDeadline(command);
         }
-        if (command.equals("event") || command.startsWith("event ")) {
+        if (isCommand(command, EVENT_COMMAND)) {
             return parseEvent(command);
         }
         throw new SandroneException("Invalid command");
@@ -103,14 +112,14 @@ public class Parser {
 
     /** Parses the description in a todo command. */
     private Todo parseTodo(String command) throws SandroneException {
-        String description = command.substring("todo".length()).trim();
+        String description = command.substring(TODO_COMMAND.length()).trim();
         validateTaskText(description, "Description");
         return new Todo(description);
     }
 
     /** Parses the description and due time in a deadline command. */
     private Deadline parseDeadline(String command) throws SandroneException {
-        String[] parts = command.substring("deadline".length()).trim().split(" /by ", 2);
+        String[] parts = command.substring(DEADLINE_COMMAND.length()).trim().split(" /by ", 2);
         if (parts.length != 2) {
             throw new SandroneException("Deadline must include /by followed by a time");
         }
@@ -124,7 +133,7 @@ public class Parser {
 
     /** Parses the description, start time, and end time in an event command. */
     private Event parseEvent(String command) throws SandroneException {
-        String[] fromParts = command.substring("event".length()).trim().split(" /from ", 2);
+        String[] fromParts = command.substring(EVENT_COMMAND.length()).trim().split(" /from ", 2);
         if (fromParts.length != 2) {
             throw new SandroneException("Event must include /from and /to times");
         }
@@ -197,7 +206,7 @@ public class Parser {
      * Parses the required search keyword from a find command.
      */
     private String parseFindKeyword(String command) throws SandroneException {
-        String keyword = command.substring("find".length()).trim();
+        String keyword = command.substring(FIND_COMMAND.length()).trim();
         validateTaskText(keyword, "Search keyword");
         return keyword;
     }
@@ -233,6 +242,11 @@ public class Parser {
         if (parts.length != expectedCount) {
             throw new SandroneException("invalid " + taskType + " record");
         }
+    }
+
+    /** Returns whether input is a command keyword followed by an optional argument. */
+    private boolean isCommand(String input, String commandName) {
+        return input.equals(commandName) || input.startsWith(commandName + " ");
     }
 
     /**
