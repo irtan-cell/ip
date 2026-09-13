@@ -1,5 +1,6 @@
 package sandrone.task;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -83,6 +84,36 @@ public class TaskList {
                         .toLowerCase(Locale.ROOT)
                         .contains(lowercaseKeyword))
                 .toList();
+    }
+
+    /**
+     * Calculates a snapshot of statistics for the tasks currently in this list.
+     */
+    public TaskStatistics getStatistics() {
+        int completedTasks = 0;
+        int todoCount = 0;
+        int deadlineCount = 0;
+        int eventCount = 0;
+        int scheduledTodayCount = 0;
+        LocalDate today = LocalDate.now();
+
+        for (Task task : tasks) {
+            if (task.isDone()) {
+                completedTasks++;
+            }
+            if (task instanceof Todo) {
+                todoCount++;
+            } else if (task instanceof Deadline) {
+                deadlineCount++;
+            } else if (task instanceof Event) {
+                eventCount++;
+            }
+            if (task.occursOn(today)) {
+                scheduledTodayCount++;
+            }
+        }
+        return new TaskStatistics(size(), completedTasks, todoCount, deadlineCount,
+                eventCount, scheduledTodayCount, MAX_TASKS);
     }
 
     /** Returns an unmodifiable snapshot of the tasks for saving. */

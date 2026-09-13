@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -93,5 +94,31 @@ public class TaskListTest {
 
         assertIterableEquals(List.of(readBook, returnBook), tasks.findTasks("book"));
         assertIterableEquals(List.of(), tasks.findTasks("meeting"));
+    }
+
+    @Test
+    public void getStatistics_mixedTasks_returnsCurrentTaskListCounts() throws SandroneException {
+        TaskList tasks = new TaskList();
+        LocalDate today = LocalDate.now();
+        Todo completedTodo = new Todo("submit form");
+        completedTodo.markAsDone();
+        tasks.addTask(completedTodo);
+        tasks.addTask(new Todo("read notes"));
+        tasks.addTask(new Deadline("pay bill", today.atTime(17, 0)));
+        tasks.addTask(new Event("meeting", today.atTime(10, 0), today.atTime(11, 0)));
+        tasks.addTask(new Event("tomorrow event", today.plusDays(1).atStartOfDay(),
+                today.plusDays(1).atTime(1, 0)));
+
+        TaskStatistics statistics = tasks.getStatistics();
+
+        assertEquals(5, statistics.getTotalTasks());
+        assertEquals(1, statistics.getCompletedTasks());
+        assertEquals(4, statistics.getIncompleteTasks());
+        assertEquals(20.0, statistics.getCompletionRate());
+        assertEquals(2, statistics.getTodoCount());
+        assertEquals(1, statistics.getDeadlineCount());
+        assertEquals(2, statistics.getEventCount());
+        assertEquals(2, statistics.getScheduledTodayCount());
+        assertEquals(5, statistics.getRemainingTaskSlots());
     }
 }
