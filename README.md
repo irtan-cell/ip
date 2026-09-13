@@ -7,6 +7,7 @@ Sandrone frees your mind from having to remember things you need to do. It is:
 - text-based
 - easy to learn
 - fun to interact with
+- super spectacular
 
 And it is ***FREE***! 🕰️
 
