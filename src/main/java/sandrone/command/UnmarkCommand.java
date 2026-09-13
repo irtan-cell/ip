@@ -23,8 +23,7 @@ public class UnmarkCommand extends Command {
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws SandroneException {
-        Task task = tasks.getTaskByNumber(taskNumber);
-        task.markAsNotDone();
+        Task task = tasks.unmarkTaskByNumber(taskNumber);
         storage.save(tasks.getTasks());
         ui.showTaskMarked(task, false);
     }

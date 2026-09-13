@@ -23,8 +23,7 @@ public class MarkCommand extends Command {
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws SandroneException {
-        Task task = tasks.getTaskByNumber(taskNumber);
-        task.markAsDone();
+        Task task = tasks.markTaskByNumber(taskNumber);
         storage.save(tasks.getTasks());
         ui.showTaskMarked(task, true);
     }
