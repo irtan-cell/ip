@@ -36,6 +36,7 @@ public class TaskList {
 
     /** Returns the task at the specified zero-based index. */
     public Task getTask(int index) {
+        assert index >= 0 && index < tasks.size() : "Task index must refer to an existing task";
         return tasks.get(index);
     }
 
