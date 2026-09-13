@@ -17,6 +17,7 @@ class TaskStatisticsTest {
         assertEquals(2, statistics.getDeadlineCount());
         assertEquals(3, statistics.getEventCount());
         assertEquals(2, statistics.getScheduledTodayCount());
+        assertEquals(10, statistics.getTaskLimit());
         assertEquals(2, statistics.getRemainingTaskSlots());
     }
 

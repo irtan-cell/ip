@@ -2,10 +2,12 @@ package sandrone.ui;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 
 import sandrone.task.Task;
 import sandrone.task.TaskList;
+import sandrone.task.TaskStatistics;
 
 /**
  * Handles all console output shown to the user.
@@ -101,6 +103,24 @@ public class Ui {
         writeLines(
                 " Got it, I have removed this task:",
                 "   [" + task.getStatusIcon() + "] " + task.getDescription());
+    }
+
+    /** Displays a summary of the current task list. */
+    public void showTaskStatistics(TaskStatistics statistics) {
+        writeLines(
+                "Task statistics:",
+                "Total tasks: " + statistics.getTotalTasks() + " / " + statistics.getTaskLimit(),
+                "Completed: " + statistics.getCompletedTasks(),
+                "Incomplete: " + statistics.getIncompleteTasks(),
+                String.format(Locale.ROOT, "Completion rate: %.1f%%", statistics.getCompletionRate()),
+                "",
+                "By type:",
+                "Todos: " + statistics.getTodoCount(),
+                "Deadlines: " + statistics.getDeadlineCount(),
+                "Events: " + statistics.getEventCount(),
+                "",
+                "Scheduled today: " + statistics.getScheduledTodayCount(),
+                "Remaining task slots: " + statistics.getRemainingTaskSlots());
     }
 
     /**

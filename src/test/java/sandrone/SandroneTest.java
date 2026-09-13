@@ -31,11 +31,14 @@ class SandroneTest {
     }
 
     @Test
-    void getResponse_statsCommand_returnsTemporaryMessage() {
+    void getResponse_statsCommand_returnsFormattedStatistics() {
         Sandrone sandrone = new Sandrone(temporaryDirectory.resolve("tasks.txt").toString());
 
         String response = sandrone.getResponse("stats");
 
-        assertTrue(response.contains("Task statistics will be available soon."));
+        assertTrue(response.contains("Task statistics:"));
+        assertTrue(response.contains("Total tasks: 0 / 10"));
+        assertTrue(response.contains("Completion rate: 0.0%"));
+        assertTrue(response.contains("Remaining task slots: 10"));
     }
 }

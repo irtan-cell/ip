@@ -67,6 +67,11 @@ public class TaskStatistics {
         return scheduledTodayCount;
     }
 
+    /** Returns the maximum number of tasks the task list can hold. */
+    public int getTaskLimit() {
+        return taskLimit;
+    }
+
     /** Returns the number of task slots still available. */
     public int getRemainingTaskSlots() {
         return taskLimit - totalTasks;
