@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import sandrone.SandroneException;
 import sandrone.command.CommandType;
 import sandrone.command.FindCommand;
+import sandrone.command.StatsCommand;
 import sandrone.task.Deadline;
 import sandrone.task.Event;
 import sandrone.task.Task;
@@ -29,9 +30,11 @@ public class ParserTest {
         assertEquals(CommandType.ADD, parser.getCommandType("todo read book"));
         assertEquals(CommandType.REMOVE, parser.getCommandType("remove 1"));
         assertEquals(CommandType.FIND, parser.getCommandType("find book"));
+        assertEquals(CommandType.STATS, parser.getCommandType("stats"));
         assertEquals(CommandType.UNKNOWN, parser.getCommandType("remind me"));
         assertEquals(CommandType.UNKNOWN, parser.getCommandType("todoLater"));
         assertEquals(CommandType.UNKNOWN, parser.getCommandType("bye later"));
+        assertEquals(CommandType.UNKNOWN, parser.getCommandType("stats today"));
     }
 
     @Test
@@ -49,6 +52,13 @@ public class ParserTest {
         Parser parser = new Parser();
 
         assertInstanceOf(FindCommand.class, parser.parse("find book"));
+    }
+
+    @Test
+    public void parse_statsCommand_returnsStatsCommand() throws SandroneException {
+        Parser parser = new Parser();
+
+        assertInstanceOf(StatsCommand.class, parser.parse("stats"));
     }
 
     @Test

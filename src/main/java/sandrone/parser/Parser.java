@@ -16,6 +16,7 @@ import sandrone.command.FindCommand;
 import sandrone.command.ListCommand;
 import sandrone.command.MarkCommand;
 import sandrone.command.RemoveCommand;
+import sandrone.command.StatsCommand;
 import sandrone.command.UnmarkCommand;
 import sandrone.task.Deadline;
 import sandrone.task.Event;
@@ -35,6 +36,7 @@ public class Parser {
     private static final String EVENT_COMMAND = "event";
     private static final String REMOVE_COMMAND = "remove";
     private static final String FIND_COMMAND = "find";
+    private static final String STATS_COMMAND = "stats";
     private static final DateTimeFormatter LIST_DATE_FORMAT =
         DateTimeFormatter.ofPattern("d/M/uuuu")
             .withResolverStyle(ResolverStyle.STRICT);
@@ -66,6 +68,9 @@ public class Parser {
         if (isCommand(input, FIND_COMMAND)) {
             return CommandType.FIND;
         }
+        if (input.equals(STATS_COMMAND)) {
+            return CommandType.STATS;
+        }
         return CommandType.UNKNOWN;
     }
 
@@ -89,6 +94,8 @@ public class Parser {
                 return new RemoveCommand(parseTaskNumber(command, REMOVE_COMMAND));
             case FIND:
                 return new FindCommand(parseFindKeyword(command));
+            case STATS:
+                return new StatsCommand();
             default:
                 throw new SandroneException("Invalid command");
         }

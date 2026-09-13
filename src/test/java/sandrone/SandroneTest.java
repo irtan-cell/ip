@@ -29,4 +29,13 @@ class SandroneTest {
         assertTrue(response.contains("Bye..."));
         assertTrue(sandrone.isExitRequested());
     }
+
+    @Test
+    void getResponse_statsCommand_returnsTemporaryMessage() {
+        Sandrone sandrone = new Sandrone(temporaryDirectory.resolve("tasks.txt").toString());
+
+        String response = sandrone.getResponse("stats");
+
+        assertTrue(response.contains("Task statistics will be available soon."));
+    }
 }
