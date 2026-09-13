@@ -100,6 +100,16 @@ public class ParserTest {
     }
 
     @Test
+    public void parseTask_unknownTaskCommand_throwsException() {
+        Parser parser = new Parser();
+
+        SandroneException exception = assertThrows(SandroneException.class,
+            () -> parser.parseTask("remind me"));
+
+        assertEquals("Invalid command", exception.getMessage());
+    }
+
+    @Test
     public void parseTaskFromFile_eachTaskType_restoresTypeAndCompletionStatus()
             throws SandroneException {
         Parser parser = new Parser();

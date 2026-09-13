@@ -90,40 +90,55 @@ public class Parser {
      */
     public Task parseTask(String command) throws SandroneException {
         if (command.equals("todo") || command.startsWith("todo ")) {
-            String description = command.substring(4).trim();
-            validateTaskText(description, "Description");
-            return new Todo(description);
-        } else if (command.equals("deadline") || command.startsWith("deadline ")) {
-            String rest = command.substring(8).trim();
-            String[] parts = rest.split(" /by ", 2);
-            if (parts.length != 2) {
-                throw new SandroneException("Deadline must include /by followed by a time");
-            }
-            String description = parts[0].trim();
-            String by = parts[1].trim();
-            LocalDateTime byDate = parseDateTime(by);
-            validateTaskText(description, "Description");
-            validateTaskText(by, "Deadline time");
-            return new Deadline(description, byDate);
-        } else if (command.equals("event") || command.startsWith("event ")) {
-            String rest = command.substring(5).trim();
-            String[] fromParts = rest.split(" /from ", 2);
-            if (fromParts.length != 2) {
-                throw new SandroneException("Event must include /from and /to times");
-            }
-            String description = fromParts[0].trim();
-            String[] toParts = fromParts[1].split(" /to ", 2);
-            if (toParts.length != 2) {
-                throw new SandroneException("Event must include /from and /to times");
-            }
-            String from = toParts[0].trim();
-            String to = toParts[1].trim();
-            validateTaskText(description, "Description");
-            validateTaskText(from, "Event start time");
-            validateTaskText(to, "Event end time");
-            return new Event(description, parseDateTime(from), parseDateTime(to));
+            return parseTodo(command);
+        }
+        if (command.equals("deadline") || command.startsWith("deadline ")) {
+            return parseDeadline(command);
+        }
+        if (command.equals("event") || command.startsWith("event ")) {
+            return parseEvent(command);
         }
         throw new SandroneException("Invalid command");
+    }
+
+    /** Parses the description in a todo command. */
+    private Todo parseTodo(String command) throws SandroneException {
+        String description = command.substring("todo".length()).trim();
+        validateTaskText(description, "Description");
+        return new Todo(description);
+    }
+
+    /** Parses the description and due time in a deadline command. */
+    private Deadline parseDeadline(String command) throws SandroneException {
+        String[] parts = command.substring("deadline".length()).trim().split(" /by ", 2);
+        if (parts.length != 2) {
+            throw new SandroneException("Deadline must include /by followed by a time");
+        }
+        String description = parts[0].trim();
+        String by = parts[1].trim();
+        LocalDateTime byDate = parseDateTime(by);
+        validateTaskText(description, "Description");
+        validateTaskText(by, "Deadline time");
+        return new Deadline(description, byDate);
+    }
+
+    /** Parses the description, start time, and end time in an event command. */
+    private Event parseEvent(String command) throws SandroneException {
+        String[] fromParts = command.substring("event".length()).trim().split(" /from ", 2);
+        if (fromParts.length != 2) {
+            throw new SandroneException("Event must include /from and /to times");
+        }
+        String description = fromParts[0].trim();
+        String[] toParts = fromParts[1].split(" /to ", 2);
+        if (toParts.length != 2) {
+            throw new SandroneException("Event must include /from and /to times");
+        }
+        String from = toParts[0].trim();
+        String to = toParts[1].trim();
+        validateTaskText(description, "Description");
+        validateTaskText(from, "Event start time");
+        validateTaskText(to, "Event end time");
+        return new Event(description, parseDateTime(from), parseDateTime(to));
     }
 
     /**
