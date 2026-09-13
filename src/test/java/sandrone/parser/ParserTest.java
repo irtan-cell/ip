@@ -30,6 +30,8 @@ public class ParserTest {
         assertEquals(CommandType.REMOVE, parser.getCommandType("remove 1"));
         assertEquals(CommandType.FIND, parser.getCommandType("find book"));
         assertEquals(CommandType.UNKNOWN, parser.getCommandType("remind me"));
+        assertEquals(CommandType.UNKNOWN, parser.getCommandType("todoLater"));
+        assertEquals(CommandType.UNKNOWN, parser.getCommandType("bye later"));
     }
 
     @Test
@@ -97,6 +99,16 @@ public class ParserTest {
             () -> parser.parseTask("todo invalid | description"));
 
         assertEquals("Description cannot contain |", exception.getMessage());
+    }
+
+    @Test
+    public void parseTask_unknownTaskCommand_throwsException() {
+        Parser parser = new Parser();
+
+        SandroneException exception = assertThrows(SandroneException.class,
+            () -> parser.parseTask("remind me"));
+
+        assertEquals("Invalid command", exception.getMessage());
     }
 
     @Test

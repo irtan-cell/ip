@@ -48,16 +48,16 @@ public class TaskList {
         return getTask(taskNumber - 1);
     }
 
-    /** Marks the specified task as done and returns it. */
-    public Task markTask(int index) {
-        Task task = getTask(index);
+    /** Marks the task identified by a one-based user task number as done. */
+    public Task markTaskByNumber(int taskNumber) throws SandroneException {
+        Task task = getTaskByNumber(taskNumber);
         task.markAsDone();
         return task;
     }
 
-    /** Marks the specified task as not done and returns it. */
-    public Task unmarkTask(int index) {
-        Task task = getTask(index);
+    /** Marks the task identified by a one-based user task number as not done. */
+    public Task unmarkTaskByNumber(int taskNumber) throws SandroneException {
+        Task task = getTaskByNumber(taskNumber);
         task.markAsNotDone();
         return task;
     }

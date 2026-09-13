@@ -29,9 +29,9 @@ public class TaskListTest {
         TaskList tasks = new TaskList();
         tasks.addTask(new Task("read book"));
 
-        tasks.markTask(0);
+        tasks.markTaskByNumber(1);
         assertEquals("X", tasks.getTask(0).getStatusIcon());
-        tasks.unmarkTask(0);
+        tasks.unmarkTaskByNumber(1);
 
         assertEquals(" ", tasks.getTask(0).getStatusIcon());
     }
