@@ -5,6 +5,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.TextFlow?>
 
 <fx:root alignment="TOP_RIGHT" maxWidth="1.7976931348623157E308" prefWidth="420.0"
          stylesheets="@../css/dialog-box.css" type="javafx.scene.layout.HBox"
@@ -18,6 +19,11 @@
                         <Insets bottom="8.0" left="10.0" right="10.0" top="8.0" />
                     </padding>
                 </Label>
+                <TextFlow fx:id="richDialog" styleClass="dialog-label">
+                    <padding>
+                        <Insets bottom="8.0" left="10.0" right="10.0" top="8.0" />
+                    </padding>
+                </TextFlow>
             </children>
             <HBox.margin>
                 <Insets left="8.0" right="8.0" />

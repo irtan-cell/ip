@@ -13,6 +13,8 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 /** A chat bubble used to show either a user command or Sandrone's response. */
 public class DialogBox extends HBox {
@@ -20,6 +22,8 @@ public class DialogBox extends HBox {
     private Label dialog;
     @FXML
     private Label senderName;
+    @FXML
+    private TextFlow richDialog;
     @FXML
     private ImageView displayPicture;
 
@@ -33,7 +37,7 @@ public class DialogBox extends HBox {
         } catch (IOException e) {
             throw new IllegalStateException("Unable to load the dialog box view", e);
         }
-        dialog.setText(text);
+        setDialogText(text);
         displayPicture.setImage(image);
         senderName.setVisible(false);
         senderName.setManaged(false);
@@ -75,5 +79,30 @@ public class DialogBox extends HBox {
         getChildren().setAll(children);
         setAlignment(Pos.TOP_LEFT);
         dialog.getStyleClass().add("reply-label");
+        richDialog.getStyleClass().add("reply-label");
+    }
+
+    /** Displays statistics headings as underlined text while keeping other text unchanged. */
+    private void setDialogText(String text) {
+        if (!text.startsWith("Task statistics" + System.lineSeparator())) {
+            dialog.setText(text);
+            richDialog.setVisible(false);
+            richDialog.setManaged(false);
+            return;
+        }
+
+        dialog.setVisible(false);
+        dialog.setManaged(false);
+        String[] lines = text.split("\\R", -1);
+        for (int i = 0; i < lines.length; i++) {
+            Text line = new Text(lines[i]);
+            if (lines[i].equals("Task statistics") || lines[i].equals("By type")) {
+                line.setUnderline(true);
+            }
+            richDialog.getChildren().add(line);
+            if (i < lines.length - 1) {
+                richDialog.getChildren().add(new Text(System.lineSeparator()));
+            }
+        }
     }
 }

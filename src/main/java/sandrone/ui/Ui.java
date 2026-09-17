@@ -82,10 +82,11 @@ public class Ui {
      * Displays confirmation that a task was added.
      */
     public void showTaskAdded(String command, int count) {
+        String taskNoun = count == 1 ? "task" : "tasks";
         writeLines(
                 " Recorded. Do try not to make me repeat the process.",
                 " " + command,
-                "You now have " + count + " tasks in the list");
+                "You now have " + count + " " + taskNoun + " in the list");
     }
 
     /**
@@ -110,13 +111,13 @@ public class Ui {
     /** Displays a summary of the current task list. */
     public void showTaskStatistics(TaskStatistics statistics) {
         writeLines(
-                "Task statistics:",
+                "Task statistics",
                 "Total tasks: " + statistics.getTotalTasks() + " / " + statistics.getTaskLimit(),
                 "Completed: " + statistics.getCompletedTasks(),
                 "Incomplete: " + statistics.getIncompleteTasks(),
                 String.format(Locale.ROOT, "Completion rate: %.1f%%", statistics.getCompletionRate()),
                 "",
-                "By type:",
+                "By type",
                 "Todos: " + statistics.getTodoCount(),
                 "Deadlines: " + statistics.getDeadlineCount(),
                 "Events: " + statistics.getEventCount(),

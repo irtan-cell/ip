@@ -20,6 +20,11 @@ class SandroneTest {
 
         assertTrue(response.contains("Recorded. Do try not to make me repeat the process."));
         assertTrue(response.contains("todo read JavaFX guide"));
+        assertTrue(response.contains("You now have 1 task in the list"));
+
+        String secondResponse = sandrone.getResponse("todo write tests");
+
+        assertTrue(secondResponse.contains("You now have 2 tasks in the list"));
     }
 
     @Test
@@ -38,7 +43,10 @@ class SandroneTest {
 
         String response = sandrone.getResponse("stats");
 
-        assertTrue(response.contains("Task statistics:"));
+        assertTrue(response.contains("Task statistics"));
+        assertFalse(response.contains("Task statistics:"));
+        assertTrue(response.contains("By type"));
+        assertFalse(response.contains("By type:"));
         assertTrue(response.contains("Total tasks: 0 / 10"));
         assertTrue(response.contains("Completion rate: 0.0%"));
         assertTrue(response.contains("Remaining task slots: 10"));
