@@ -58,11 +58,11 @@ public class Sandrone {
             command.execute(tasks, ui, storage);
             isExitRequested = command.isExit();
             if (isExitRequested) {
-                ui.showMessage("Bye...");
+                ui.showMessage("Your records have been preserved. Do not lose them.");
             }
         } catch (SandroneException e) {
             lastResponseWasError = true;
-            ui.showMessage("Oops! " + e.getMessage());
+            ui.showMessage("That input does not form a valid instruction. Correct it: " + e.getMessage());
         }
         return ui.consumeOutput();
     }

@@ -40,8 +40,9 @@ public class Ui {
     /** Displays Sandrone's greeting. */
     public void showWelcome() {
         writeLines(
-                "Tch... Hello. I'm Sandrone. ...Don't make me say it again.",
-                "What do you want?");
+                "Sandrone, Marionette.",
+                "Where, when, how. Go.",
+                "Facts are objective. Your records, however, require maintenance. State your task.");
     }
 
     /**
@@ -56,8 +57,8 @@ public class Ui {
      */
     public void showTaskList(TaskList tasks, LocalDate date, String dateText) {
         String listHeading = dateText.isEmpty()
-                ? " Here are the tasks in your list:"
-                : " Here are the tasks on " + dateText + ":";
+                ? " Your records are below. Review them carefully."
+                : " Your records for " + dateText + " are below. Review them carefully.";
         writeLine(listHeading);
         for (int i = 0; i < tasks.size(); i++) {
             Task task = tasks.getTask(i);
@@ -71,7 +72,7 @@ public class Ui {
      * Displays tasks whose descriptions match a search keyword.
      */
     public void showMatchingTasks(List<Task> matchingTasks) {
-        writeLine(" Here are the matching tasks in your list:");
+        writeLine(" Matching records are below. Review them carefully.");
         for (int i = 0; i < matchingTasks.size(); i++) {
             writeLine(" " + (i + 1) + "." + matchingTasks.get(i));
         }
@@ -82,7 +83,8 @@ public class Ui {
      */
     public void showTaskAdded(String command, int count) {
         writeLines(
-                " added: " + command,
+                " Recorded. Do try not to make me repeat the process.",
+                " " + command,
                 "You now have " + count + " tasks in the list");
     }
 
@@ -91,8 +93,8 @@ public class Ui {
      */
     public void showTaskMarked(Task task, boolean isDone) {
         writeLines(
-                isDone ? " Nice! I've marked this task as done:"
-                        : " OK, I've marked this task as not done yet:",
+                isDone ? " Status updated. An acceptable result:"
+                        : " Status updated. The record has been reopened:",
                 "   [" + task.getStatusIcon() + "] " + task.getDescription());
     }
 

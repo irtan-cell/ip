@@ -18,7 +18,8 @@ class SandroneTest {
 
         String response = sandrone.getResponse("todo read JavaFX guide");
 
-        assertTrue(response.contains("added: todo read JavaFX guide"));
+        assertTrue(response.contains("Recorded. Do try not to make me repeat the process."));
+        assertTrue(response.contains("todo read JavaFX guide"));
     }
 
     @Test
@@ -27,7 +28,7 @@ class SandroneTest {
 
         String response = sandrone.getResponse("bye");
 
-        assertTrue(response.contains("Bye..."));
+        assertTrue(response.contains("Your records have been preserved. Do not lose them."));
         assertTrue(sandrone.isExitRequested());
     }
 
@@ -49,7 +50,7 @@ class SandroneTest {
 
         String errorResponse = sandrone.getResponse("not a command");
 
-        assertTrue(errorResponse.contains("Oops! Invalid command"));
+        assertTrue(errorResponse.contains("That input does not form a valid instruction. Correct it: Invalid command"));
         assertTrue(sandrone.wasLastResponseError());
 
         sandrone.getResponse("stats");

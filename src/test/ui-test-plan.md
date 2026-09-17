@@ -2,16 +2,16 @@
 
 ## How to run
 
-Use Java 25. Compile the application into a temporary directory, then run the
-`Sandrone` class. A typical test command is:
+Use Java 25. Compile the application with Gradle so that its JavaFX dependencies
+are available, then run the console `Sandrone` class from the compiled output.
+A typical test command is:
 
 ```bash
 TEST_UI_JAVA_HOME=$(/usr/libexec/java_home -v 25)
 PROJECT_ROOT=$(pwd)
-mkdir -p _temp/ui-test-classes
-"$TEST_UI_JAVA_HOME/bin/javac" -d _temp/ui-test-classes $(find src/main/java -name '*.java')
+./gradlew classes
 TEST_DIR=$(mktemp -d)
-(cd "$TEST_DIR" && "$TEST_UI_JAVA_HOME/bin/java" -cp "$PROJECT_ROOT/_temp/ui-test-classes" sandrone.Sandrone)
+(cd "$TEST_DIR" && "$TEST_UI_JAVA_HOME/bin/java" -cp "$PROJECT_ROOT/build/classes/java/main" sandrone.Sandrone)
 ```
 
 Run every test case in a fresh process. Compare its complete output exactly,
@@ -47,44 +47,48 @@ S       A A  NN  N D   D R   R O   O NN  N E
     S  A   A N  NN D   D R R   O   O N  NN E
 SSSS   A   A N   N DDDD  R  RR  OOO  N   N EEEEE
 
-Tch... Hello. I'm Sandrone. ...Don't make me say it again.
-What do you want?
+Sandrone, Marionette.
+Where, when, how. Go.
+Facts are objective. Your records, however, require maintenance. State your task.
 ____________________________________________________________
 
 ____________________________________________________________
- added: todo read book
+ Recorded. Do try not to make me repeat the process.
+ todo read book
 You now have 1 tasks in the list
 ____________________________________________________________
 
 ____________________________________________________________
- added: deadline return book /by 29/8/2026 1430
+ Recorded. Do try not to make me repeat the process.
+ deadline return book /by 29/8/2026 1430
 You now have 2 tasks in the list
 ____________________________________________________________
 
 ____________________________________________________________
- added: event project meeting /from 30/8/2026 1400 /to 30/8/2026 1600
+ Recorded. Do try not to make me repeat the process.
+ event project meeting /from 30/8/2026 1400 /to 30/8/2026 1600
 You now have 3 tasks in the list
 ____________________________________________________________
 
 ____________________________________________________________
- Nice! I've marked this task as done:
+ Status updated. An acceptable result:
    [X] read book
 ____________________________________________________________
 
 ____________________________________________________________
- OK, I've marked this task as not done yet:
+ Status updated. The record has been reopened:
    [ ] read book
 ____________________________________________________________
 
 ____________________________________________________________
- Here are the tasks in your list:
+ Your records are below. Review them carefully.
  1.[T][ ] read book
  2.[D][ ] return book (by: 29/8/2026 2:30PM)
  3.[E][ ] project meeting (from: 30/8/2026 2:00PM to: 30/8/2026 4:00PM)
 ____________________________________________________________
 
 ____________________________________________________________
-Bye...
+Your records have been preserved. Do not lose them.
 ____________________________________________________________
 
 ```
@@ -132,19 +136,20 @@ S       A A  NN  N D   D R   R O   O NN  N E
     S  A   A N  NN D   D R R   O   O N  NN E
 SSSS   A   A N   N DDDD  R  RR  OOO  N   N EEEEE
 
-Tch... Hello. I'm Sandrone. ...Don't make me say it again.
-What do you want?
+Sandrone, Marionette.
+Where, when, how. Go.
+Facts are objective. Your records, however, require maintenance. State your task.
 ____________________________________________________________
 
 ____________________________________________________________
- Here are the tasks in your list:
+ Your records are below. Review them carefully.
  1.[T][ ] read book
  2.[D][X] return book (by: 29/8/2026 2:30PM)
  3.[E][ ] project meeting (from: 30/8/2026 2:00PM to: 30/8/2026 4:00PM)
 ____________________________________________________________
 
 ____________________________________________________________
-Bye...
+Your records have been preserved. Do not lose them.
 ____________________________________________________________
 
 ```
@@ -170,12 +175,13 @@ S       A A  NN  N D   D R   R O   O NN  N E
     S  A   A N  NN D   D R R   O   O N  NN E
 SSSS   A   A N   N DDDD  R  RR  OOO  N   N EEEEE
 
-Tch... Hello. I'm Sandrone. ...Don't make me say it again.
-What do you want?
+Sandrone, Marionette.
+Where, when, how. Go.
+Facts are objective. Your records, however, require maintenance. State your task.
 ____________________________________________________________
 
 ____________________________________________________________
-Bye...
+Your records have been preserved. Do not lose them.
 ____________________________________________________________
 
 ```
@@ -210,44 +216,45 @@ S       A A  NN  N D   D R   R O   O NN  N E
     S  A   A N  NN D   D R R   O   O N  NN E
 SSSS   A   A N   N DDDD  R  RR  OOO  N   N EEEEE
 
-Tch... Hello. I'm Sandrone. ...Don't make me say it again.
-What do you want?
+Sandrone, Marionette.
+Where, when, how. Go.
+Facts are objective. Your records, however, require maintenance. State your task.
 ____________________________________________________________
 
 ____________________________________________________________
-Oops! Description cannot be empty
+That input does not form a valid instruction. Correct it: Description cannot be empty
 ____________________________________________________________
 
 ____________________________________________________________
-Oops! Deadline must include /by followed by a time
+That input does not form a valid instruction. Correct it: Deadline must include /by followed by a time
 ____________________________________________________________
 
 ____________________________________________________________
-Oops! Event must include /from and /to times
+That input does not form a valid instruction. Correct it: Event must include /from and /to times
 ____________________________________________________________
 
 ____________________________________________________________
-Oops! Task number must be a positive whole number
+That input does not form a valid instruction. Correct it: Task number must be a positive whole number
 ____________________________________________________________
 
 ____________________________________________________________
-Oops! Invalid task index
+That input does not form a valid instruction. Correct it: Invalid task index
 ____________________________________________________________
 
 ____________________________________________________________
-Oops! Invalid task index
+That input does not form a valid instruction. Correct it: Invalid task index
 ____________________________________________________________
 
 ____________________________________________________________
-Oops! Description cannot contain |
+That input does not form a valid instruction. Correct it: Description cannot contain |
 ____________________________________________________________
 
 ____________________________________________________________
-Oops! Invalid command
+That input does not form a valid instruction. Correct it: Invalid command
 ____________________________________________________________
 
 ____________________________________________________________
-Bye...
+Your records have been preserved. Do not lose them.
 ____________________________________________________________
 
 ```
@@ -278,38 +285,42 @@ S       A A  NN  N D   D R   R O   O NN  N E
     S  A   A N  NN D   D R R   O   O N  NN E
 SSSS   A   A N   N DDDD  R  RR  OOO  N   N EEEEE
 
-Tch... Hello. I'm Sandrone. ...Don't make me say it again.
-What do you want?
+Sandrone, Marionette.
+Where, when, how. Go.
+Facts are objective. Your records, however, require maintenance. State your task.
 ____________________________________________________________
 
 ____________________________________________________________
- added: todo read book
+ Recorded. Do try not to make me repeat the process.
+ todo read book
 You now have 1 tasks in the list
 ____________________________________________________________
 
 ____________________________________________________________
- added: deadline return book /by 29/8/2026 1430
+ Recorded. Do try not to make me repeat the process.
+ deadline return book /by 29/8/2026 1430
 You now have 2 tasks in the list
 ____________________________________________________________
 
 ____________________________________________________________
- added: todo write report
+ Recorded. Do try not to make me repeat the process.
+ todo write report
 You now have 3 tasks in the list
 ____________________________________________________________
 
 ____________________________________________________________
- Nice! I've marked this task as done:
+ Status updated. An acceptable result:
    [X] read book
 ____________________________________________________________
 
 ____________________________________________________________
- Here are the matching tasks in your list:
+ Matching records are below. Review them carefully.
  1.[T][X] read book
  2.[D][ ] return book (by: 29/8/2026 2:30PM)
 ____________________________________________________________
 
 ____________________________________________________________
-Bye...
+Your records have been preserved. Do not lose them.
 ____________________________________________________________
 
 ```

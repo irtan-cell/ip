@@ -1,5 +1,7 @@
 package sandrone.ui;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -43,6 +45,10 @@ public class MainWindow extends AnchorPane {
         assert sandrone != null : "Sandrone must be injected before handling user input";
         String input = userInput.getText();
         if (input.isBlank()) {
+            if (ThreadLocalRandom.current().nextDouble() < 0.40) {
+                dialogContainer.getChildren().add(
+                        DialogBox.getSandroneDialog("Ever heard of knocking?", sandroneImage));
+            }
             return;
         }
 
