@@ -49,7 +49,9 @@ public class MainWindow extends AnchorPane {
         String response = sandrone.getResponse(input);
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getSandroneDialog(response, sandroneImage));
+                sandrone.wasLastResponseError()
+                        ? DialogBox.getErrorDialog(response, sandroneImage)
+                        : DialogBox.getSandroneDialog(response, sandroneImage));
         userInput.clear();
 
         if (sandrone.isExitRequested()) {

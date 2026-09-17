@@ -1,5 +1,6 @@
 package sandrone;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Path;
@@ -40,5 +41,19 @@ class SandroneTest {
         assertTrue(response.contains("Total tasks: 0 / 10"));
         assertTrue(response.contains("Completion rate: 0.0%"));
         assertTrue(response.contains("Remaining task slots: 10"));
+    }
+
+    @Test
+    void getResponse_invalidCommand_marksResponseAsError() {
+        Sandrone sandrone = new Sandrone(temporaryDirectory.resolve("tasks.txt").toString());
+
+        String errorResponse = sandrone.getResponse("not a command");
+
+        assertTrue(errorResponse.contains("Oops! Invalid command"));
+        assertTrue(sandrone.wasLastResponseError());
+
+        sandrone.getResponse("stats");
+
+        assertFalse(sandrone.wasLastResponseError());
     }
 }

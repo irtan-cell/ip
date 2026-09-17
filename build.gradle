@@ -23,18 +23,24 @@ dependencies {
     String jUnitVersion = '5.14.4'
     String javaFxVersion = '17.0.7'
 
-    implementation("org.openjfx:javafx-base:${javaFxVersion}:win")
-    implementation("org.openjfx:javafx-base:${javaFxVersion}:mac")
-    implementation("org.openjfx:javafx-base:${javaFxVersion}:linux")
-    implementation("org.openjfx:javafx-controls:${javaFxVersion}:win")
-    implementation("org.openjfx:javafx-controls:${javaFxVersion}:mac")
-    implementation("org.openjfx:javafx-controls:${javaFxVersion}:linux")
-    implementation("org.openjfx:javafx-fxml:${javaFxVersion}:win")
-    implementation("org.openjfx:javafx-fxml:${javaFxVersion}:mac")
-    implementation("org.openjfx:javafx-fxml:${javaFxVersion}:linux")
-    implementation("org.openjfx:javafx-graphics:${javaFxVersion}:win")
-    implementation("org.openjfx:javafx-graphics:${javaFxVersion}:mac")
-    implementation("org.openjfx:javafx-graphics:${javaFxVersion}:linux")
+    // JavaFX includes native graphics libraries, so use only the one that
+    // matches the computer that is building and running the application.
+    String operatingSystem = System.getProperty('os.name').toLowerCase()
+    String architecture = System.getProperty('os.arch').toLowerCase()
+    String javaFxPlatform
+    if (operatingSystem.contains('mac')) {
+        javaFxPlatform = architecture.contains('aarch64') || architecture.contains('arm64') ? 'mac-aarch64' : 'mac'
+    } else if (operatingSystem.contains('windows')) {
+        javaFxPlatform = 'win'
+    } else if (operatingSystem.contains('linux')) {
+        javaFxPlatform = 'linux'
+    } else {
+        throw new GradleException("Unsupported operating system for JavaFX: ${operatingSystem}")
+    }
+    implementation("org.openjfx:javafx-base:${javaFxVersion}:${javaFxPlatform}")
+    implementation("org.openjfx:javafx-controls:${javaFxVersion}:${javaFxPlatform}")
+    implementation("org.openjfx:javafx-fxml:${javaFxVersion}:${javaFxPlatform}")
+    implementation("org.openjfx:javafx-graphics:${javaFxVersion}:${javaFxPlatform}")
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:${jUnitVersion}"
 

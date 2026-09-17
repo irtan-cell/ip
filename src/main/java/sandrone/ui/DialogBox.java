@@ -19,6 +19,8 @@ public class DialogBox extends HBox {
     @FXML
     private Label dialog;
     @FXML
+    private Label senderName;
+    @FXML
     private ImageView displayPicture;
 
     /** Creates a dialog box containing the supplied text and profile image. */
@@ -33,17 +35,36 @@ public class DialogBox extends HBox {
         }
         dialog.setText(text);
         displayPicture.setImage(image);
+        senderName.setVisible(false);
+        senderName.setManaged(false);
     }
 
     /** Returns a dialog box styled as a user command. */
     public static DialogBox getUserDialog(String text, Image image) {
-        return new DialogBox(text, image);
+        DialogBox dialogBox = new DialogBox(text, image);
+        dialogBox.dialog.getStyleClass().add("user-label");
+        return dialogBox;
     }
 
     /** Returns a dialog box styled as Sandrone's response. */
     public static DialogBox getSandroneDialog(String text, Image image) {
         DialogBox dialogBox = new DialogBox(text, image);
         dialogBox.flip();
+        dialogBox.senderName.setText("Sandrone");
+        dialogBox.senderName.setVisible(true);
+        dialogBox.senderName.setManaged(true);
+        return dialogBox;
+    }
+
+    /** Returns a dialog box styled as a Sandrone error response. */
+    public static DialogBox getErrorDialog(String text, Image image) {
+        DialogBox dialogBox = new DialogBox(text, image);
+        dialogBox.flip();
+        dialogBox.senderName.setText("Command error");
+        dialogBox.senderName.setVisible(true);
+        dialogBox.senderName.setManaged(true);
+        dialogBox.dialog.getStyleClass().remove("reply-label");
+        dialogBox.dialog.getStyleClass().add("error-label");
         return dialogBox;
     }
 

@@ -16,6 +16,7 @@ public class Sandrone {
     private final Ui ui;
     private final Parser parser;
     private boolean isExitRequested;
+    private boolean lastResponseWasError;
 
     /**
      * Creates the chatbot and restores any previously saved tasks.
@@ -51,6 +52,7 @@ public class Sandrone {
      * @return text produced while processing the command
      */
     public String getResponse(String input) {
+        lastResponseWasError = false;
         try {
             Command command = parser.parse(input.trim());
             command.execute(tasks, ui, storage);
@@ -59,6 +61,7 @@ public class Sandrone {
                 ui.showMessage("Bye...");
             }
         } catch (SandroneException e) {
+            lastResponseWasError = true;
             ui.showMessage("Oops! " + e.getMessage());
         }
         return ui.consumeOutput();
@@ -67,6 +70,11 @@ public class Sandrone {
     /** Returns whether the most recently processed command was an exit command. */
     public boolean isExitRequested() {
         return isExitRequested;
+    }
+
+    /** Returns whether processing the most recent command produced an error response. */
+    public boolean wasLastResponseError() {
+        return lastResponseWasError;
     }
 
     /** Recreates the task list from saved task records. */
