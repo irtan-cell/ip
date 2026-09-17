@@ -1,20 +1,25 @@
 .root {
-    main-color: rgb(237, 255, 242);
+    main-color: rgb(238, 244, 255);
     -fx-background-color: main-color;
 }
 
 .text-field {
-    -fx-background-color: #d9ffe2;
+    -fx-background-color: #fffaf0;
+    -fx-border-color: #c9a661;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
     -fx-font: 16px "Arial";
 }
 
 .button {
-    -fx-background-color: mediumspringgreen;
+    -fx-background-color: #a67c3a;
+    -fx-text-fill: white;
+    -fx-background-radius: 6px;
     -fx-font: italic bold 14px "Arial";
 }
 
 .button:hover {
-    -fx-background-color: cyan;
+    -fx-background-color: #c49752;
 }
 
 .scroll-pane {
