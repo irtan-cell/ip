@@ -48,3 +48,64 @@ bye
 - [x] Managing tasks
 - [ ] Managing deadlines (coming soon)
 - [ ] Reminders (coming soon)
+
+### Command Reference
+
+For the full User Guide, including date formats and error handling, see the
+[Sandrone User Guide](docs/README.md).
+
+#### Add a todo
+
+```text
+todo Complete daily commissions in Nod-Krai
+```
+
+#### Add a deadline
+
+```text
+deadline Spend Original Resin before it caps /by 18/9/2026 2359
+```
+
+#### Add an event
+
+```text
+event Farm talent books with the party /from 17/9/2026 1900 /to 17/9/2026 2030
+```
+
+#### List tasks
+
+```text
+list
+list 18/9/2026
+```
+
+#### Find tasks
+
+```text
+find resin
+```
+
+#### Mark or unmark a task
+
+```text
+mark 1
+unmark 1
+```
+
+#### Remove a task
+
+```text
+remove 3
+```
+
+#### View statistics
+
+```text
+stats
+```
+
+#### End the session
+
+```text
+bye
+```
