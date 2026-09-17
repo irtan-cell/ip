@@ -82,6 +82,16 @@ public class ParserTest {
     }
 
     @Test
+    public void parseTask_deadlineWithExtraSpacesAroundByMarker_returnsDeadline()
+            throws SandroneException {
+        Parser parser = new Parser();
+
+        Task task = parser.parseTask("deadline return book    /by   29/8/2026 1430");
+
+        assertInstanceOf(Deadline.class, task);
+    }
+
+    @Test
     public void parseTask_eventCommand_returnsEventWithParsedDates() throws SandroneException {
         Parser parser = new Parser();
 
@@ -92,6 +102,26 @@ public class ParserTest {
     }
 
     @Test
+    public void parseTask_eventWithExtraSpacesAroundMarkers_returnsEvent() throws SandroneException {
+        Parser parser = new Parser();
+
+        Task task = parser.parseTask(
+                "event project meeting   /from 30/8/2026 1400    /to   30/8/2026 1600");
+
+        assertInstanceOf(Event.class, task);
+    }
+
+    @Test
+    public void parseTask_eventEndingAtStartTime_throwsException() {
+        Parser parser = new Parser();
+
+        SandroneException exception = assertThrows(SandroneException.class,
+            () -> parser.parseTask("event meeting /from 30/8/2026 1400 /to 30/8/2026 1400"));
+
+        assertEquals("Event end time must be after its start time", exception.getMessage());
+    }
+
+    @Test
     public void parseTask_missingDeadlineTime_throwsException() {
         Parser parser = new Parser();
 
@@ -99,6 +129,27 @@ public class ParserTest {
             () -> parser.parseTask("deadline submit report"));
 
         assertEquals("Deadline must include /by followed by a time", exception.getMessage());
+    }
+
+    @Test
+    public void parseTask_deadlineWithRepeatedByMarker_throwsException() {
+        Parser parser = new Parser();
+
+        SandroneException exception = assertThrows(SandroneException.class,
+            () -> parser.parseTask("deadline submit report /by 29/8/2026 1400 /by 30/8/2026 1400"));
+
+        assertEquals("Deadline must contain exactly one /by marker", exception.getMessage());
+    }
+
+    @Test
+    public void parseTask_eventWithRepeatedToMarker_throwsException() {
+        Parser parser = new Parser();
+
+        SandroneException exception = assertThrows(SandroneException.class,
+            () -> parser.parseTask(
+                "event meeting /from 29/8/2026 1400 /to 29/8/2026 1500 /to 29/8/2026 1600"));
+
+        assertEquals("Event must contain exactly one /from and one /to marker", exception.getMessage());
     }
 
     @Test
@@ -148,6 +199,16 @@ public class ParserTest {
             () -> parser.parseTaskFromFile("T | done | read book"));
 
         assertEquals("invalid task status", exception.getMessage());
+    }
+
+    @Test
+    public void parseTaskFromFile_eventEndingBeforeStartTime_throwsException() {
+        Parser parser = new Parser();
+
+        SandroneException exception = assertThrows(SandroneException.class,
+            () -> parser.parseTaskFromFile("E | 0 | meeting | 30/8/2026 4:00PM | 30/8/2026 2:00PM"));
+
+        assertEquals("Event end time must be after its start time", exception.getMessage());
     }
 
     @Test

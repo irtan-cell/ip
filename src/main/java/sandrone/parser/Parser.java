@@ -6,6 +6,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import sandrone.SandroneException;
 import sandrone.command.AddCommand;
@@ -40,6 +42,9 @@ public class Parser {
     private static final DateTimeFormatter LIST_DATE_FORMAT =
         DateTimeFormatter.ofPattern("d/M/uuuu")
             .withResolverStyle(ResolverStyle.STRICT);
+    private static final String BY_MARKER_PATTERN = "\\s+/by\\s+";
+    private static final String FROM_MARKER_PATTERN = "\\s+/from\\s+";
+    private static final String TO_MARKER_PATTERN = "\\s+/to\\s+";
 
     /**
      * Returns the type of command represented by the user's input.
@@ -126,7 +131,12 @@ public class Parser {
 
     /** Parses the description and due time in a deadline command. */
     private Deadline parseDeadline(String command) throws SandroneException {
-        String[] parts = command.substring(DEADLINE_COMMAND.length()).trim().split(" /by ", 2);
+        String deadlineDetails = command.substring(DEADLINE_COMMAND.length()).trim();
+        int byMarkerCount = countMarkers(deadlineDetails, BY_MARKER_PATTERN);
+        if (byMarkerCount > 1) {
+            throw new SandroneException("Deadline must contain exactly one /by marker");
+        }
+        String[] parts = deadlineDetails.split(BY_MARKER_PATTERN, 2);
         if (parts.length != 2) {
             throw new SandroneException("Deadline must include /by followed by a time");
         }
@@ -140,12 +150,18 @@ public class Parser {
 
     /** Parses the description, start time, and end time in an event command. */
     private Event parseEvent(String command) throws SandroneException {
-        String[] fromParts = command.substring(EVENT_COMMAND.length()).trim().split(" /from ", 2);
+        String eventDetails = command.substring(EVENT_COMMAND.length()).trim();
+        int fromMarkerCount = countMarkers(eventDetails, FROM_MARKER_PATTERN);
+        int toMarkerCount = countMarkers(eventDetails, TO_MARKER_PATTERN);
+        if (fromMarkerCount > 1 || toMarkerCount > 1) {
+            throw new SandroneException("Event must contain exactly one /from and one /to marker");
+        }
+        String[] fromParts = eventDetails.split(FROM_MARKER_PATTERN, 2);
         if (fromParts.length != 2) {
             throw new SandroneException("Event must include /from and /to times");
         }
         String description = fromParts[0].trim();
-        String[] toParts = fromParts[1].split(" /to ", 2);
+        String[] toParts = fromParts[1].split(TO_MARKER_PATTERN, 2);
         if (toParts.length != 2) {
             throw new SandroneException("Event must include /from and /to times");
         }
@@ -154,7 +170,10 @@ public class Parser {
         validateTaskText(description, "Description");
         validateTaskText(from, "Event start time");
         validateTaskText(to, "Event end time");
-        return new Event(description, parseDateTime(from), parseDateTime(to));
+        LocalDateTime start = parseDateTime(from);
+        LocalDateTime end = parseDateTime(to);
+        validateEventTimeRange(start, end);
+        return new Event(description, start, end);
     }
 
     /**
@@ -186,7 +205,10 @@ public class Parser {
                 validateTaskText(parts[2], "Description");
                 validateTaskText(parts[3], "Event start time");
                 validateTaskText(parts[4], "Event end time");
-                task = new Event(parts[2], parseDateTime(parts[3]), parseDateTime(parts[4]));
+                LocalDateTime start = parseDateTime(parts[3]);
+                LocalDateTime end = parseDateTime(parts[4]);
+                validateEventTimeRange(start, end);
+                task = new Event(parts[2], start, end);
                 break;
             default:
                 throw new SandroneException("unknown task type");
@@ -207,6 +229,24 @@ public class Parser {
         } catch (NumberFormatException e) {
             throw new SandroneException("Task number must be a positive whole number");
         }
+    }
+
+    /** Validates that an event ends after it starts. */
+    private void validateEventTimeRange(LocalDateTime start, LocalDateTime end)
+            throws SandroneException {
+        if (!end.isAfter(start)) {
+            throw new SandroneException("Event end time must be after its start time");
+        }
+    }
+
+    /** Counts non-overlapping occurrences of a command-marker pattern. */
+    private int countMarkers(String text, String markerPattern) {
+        int count = 0;
+        Matcher matcher = Pattern.compile(markerPattern).matcher(text);
+        while (matcher.find()) {
+            count++;
+        }
+        return count;
     }
 
     /**
